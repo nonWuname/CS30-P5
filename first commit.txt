@@ -1,3 +1,0 @@
-#include<bits/stdc++.h>
-
-c++ is better than python?
