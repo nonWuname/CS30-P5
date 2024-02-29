@@ -5,7 +5,6 @@
   // Extra for Experts:
   // use loop to create + Array to create some visulization
 
-  let point1 = [], point2 = [];
 
   function setup() {
     createCanvas(400, 300);
@@ -26,7 +25,7 @@
     
     
     let state = 0;
-    for(let i = 1 ; i < point2.length ; ++i){
+    for(let i = 1 ; i < 44 ; ++i){
       if(state === 3) state = 0;
       if(state === 0) fill(255,0,0);
       if(state === 1) fill(0,255,0);
