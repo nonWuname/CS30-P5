@@ -69,7 +69,8 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  // do the if statement first
+  // do the if statement first, since the list is already sort in order, i can do this in whatever i want
+  // pre ++ and -- allow me to change it first, sry, i thought need to put prefix as in c++, but in java it seem like did not matter
   if(mouseButton == LEFT) 
   { 
     if(factor_index <= factor.length - 2 ) squaresize = factor[++factor_index];
