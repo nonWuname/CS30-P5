@@ -5,7 +5,7 @@
 // I will be showing off my looping skills.  make a colour grid, not very important and hard subject
 // so i won't explain too much, just a assignment and with show some my art talent(maybe) 
 
-let squaresize = 0; // the size of square
+let squaresize = 0; // the size of square, 0 means i didn't init it
 let factor = []; // two solution to solve, by complete or cut square; i don't want waste time to come up two solution with no bonus, thus only with factor: fit entirely,
 // cut square is not consider anymore
 let factor_index = 0; // the index of factor, notice the less the index is, the less the squaersize is since i iterate from small to large
@@ -23,10 +23,6 @@ function setup() {
   squaresize = factor[factor_index];
   // obviously, createGrid
   createGrid(); 
-
-  
-
-  
 }
 
 function init_factor()
@@ -71,20 +67,13 @@ function keyPressed() {
 function mousePressed() {
   // do the if statement first, since the list is already sort in order, i can do this in whatever i want
   // pre ++ and -- allow me to change it first, sry, i thought need to put prefix as in c++, but in java it seem like did not matter
-  if(mouseButton == LEFT) 
-  { 
-    if(factor_index <= factor.length - 2 ) squaresize = factor[factor_index++];
-  }
-  else if(mouseButton == RIGHT) 
-  { 
-    if(factor_index >= 1) squaresize = factor[--factor_index];
-    
-  }  
-  //if(mouseButton != CENTER) this can avoid do nothing and fill agian when press center, however Mr.scout said it is not needed, thus put as comment
+  if(mouseButton == LEFT && factor_index <= factor.length - 2  ) squaresize = factor[++factor_index];
+  else if(mouseButton == RIGHT && factor_index >= 1 ) squaresize = factor[--factor_index];
+  //if(mouseButton != CENTER) this can avoid do nothing and fill agian when press center, however Mr.scott said it is not needed, thus put as comment
   
   //afrer change it, we redraw the grid
   createGrid();
   
 }
-// sidenote, the cut solution is possible, but inconvenience, we just need to make sure traversal at the point width - squaresize *2 if(width % y != 0) break;
-// and add bunch code, but it is not important and i am lazy since i need add more if statement
+// sidenote, the cut solution is possible, but inconvenience, we just need to make sure stop traversal at the point width - squaresize * 2 if(width % y != 0) break;
+// and add bunch code fix something, but it is not important and i am lazy
