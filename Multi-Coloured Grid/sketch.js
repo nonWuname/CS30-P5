@@ -73,7 +73,7 @@ function mousePressed() {
   // pre ++ and -- allow me to change it first, sry, i thought need to put prefix as in c++, but in java it seem like did not matter
   if(mouseButton == LEFT) 
   { 
-    if(factor_index <= factor.length - 2 ) squaresize = factor[++factor_index];
+    if(factor_index <= factor.length - 2 ) squaresize = factor[factor_index++];
   }
   else if(mouseButton == RIGHT) 
   { 
