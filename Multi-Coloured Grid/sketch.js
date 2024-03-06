@@ -6,12 +6,13 @@
 // so i won't explain too much, just a assignment and might show some my art talent(maybe) 
 
 let squaresize = 0; // the size of square, 0 means i didn't init it
-let factor = []; // two solution to solve, by complete or cut square; i don't want waste time to come up two solution with no bonus, thus only with factor: fit entirely,
+let factor = []; // two solution to solve, by complete or cut square; 
+//i don't want waste time to come up two solution with no bonus, thus only with factor: fit entirely,
 // cut square is not consider anymore
 let factor_index = 0; // the index of factor, notice the less the index is, the less the squaersize is since i iterate from small to large
 
 function setup() {
-  let size = 3100;// the size var to help people don't need to plug in two number at same time
+  let size = 3100;// canvans size
   createCanvas(size, size);
 
   // to ignore the right click
@@ -31,7 +32,8 @@ function init_factor()
   
   // main case, travesal from 20--width, all the i|width will be put into the factor list
   // if there are 60 more square(60 x 60), we ignore it, by this, no more edge case are there
-  // actually, this if(factor.length == 0 ) is not needed, but i am lazy and i don't want to change the code as long as it run completely
+  // actually, this if(factor.length == 0 ) is not needed, 
+  //but i am lazy and i don't want to change the code as long as it run completely
   if(factor.length == 0){
     for(let i = 1; i <= width ; ++i){
       if(width % i == 0 && (width / i) <= 60) factor.push(i);
@@ -42,7 +44,9 @@ function init_factor()
 }
 
 function createGrid(){
-  // this is the basic function, no need to explain too much, just use nested loop to create a grid with square and fill with colour
+  // this is the basic function,
+  // no need to explain too much
+  // just use nested loop to create a grid with square and fill with colour
   for(let x = 0; x < width ;  x+=squaresize){
     for(let y = 0; y <= width; y +=squaresize){;
       let r = random(0,256) , g = random(0,256), b = random(0,256);
@@ -61,12 +65,10 @@ function keyPressed() {
 }
 
 function mousePressed() {
-  // do the if statement first, since the list is already sort in order, i can do this in whatever i want, go left means size go smaller, vice versa
-  // pre ++ and -- allow me to change it first, sry, i thought need to put prefix as in c++, but in java it seem like did not matter
+  // do the if statement first, since the list is already sort in order,
+  // i can do this in whatever i want, go left means size go smaller, vice versa
 
-  // if factor is at length - 2, then it can't go more right, think about size 3
-  //factor[2] is the max;
-  //if index is 2 which violate this condition, then it won't go, maybe i can just used '< length - 1' instead of '<='
+
   if(mouseButton == LEFT && factor_index <= factor.length - 2 ) squaresize = factor[++factor_index];
   else if(mouseButton == RIGHT && factor_index >= 1 ) squaresize = factor[--factor_index];
   
@@ -76,5 +78,6 @@ function mousePressed() {
   createGrid();
   
 }
+
 // sidenote, the cut solution is possible, but inconvenience, we just need to make sure stop traversal at the point width - squaresize * 2 if(width % y != 0) break;
 // and add bunch code fix something, but it is not important and i am lazy
