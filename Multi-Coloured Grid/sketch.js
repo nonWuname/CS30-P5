@@ -47,14 +47,37 @@ function createGrid(){
   // this is the basic function,
   // no need to explain too much
   // just use nested loop to create a grid with square and fill with colour
+  let color = [-1,-1,-1];
+  let times = 0;
+  let len = width / squaresize;
+  let lastrow = [] ; lastrow.length = len;
+  strokeWeight(25);
+  
+
+
   for(let x = 0; x < width ;  x+=squaresize){
+    stroke(23,234,32);
     for(let y = 0; y <= width; y +=squaresize){;
-      let r = random(0,256) , g = random(0,256), b = random(0,256);
-      stroke(random(x,y));
-      strokeWeight(x%10);
-      stroke((x**2)%255,(y**2)%255,(x*y)%255);
-      fill(r,g,b);
+      for(let i = 0; i < 3; ++i)
+      {
+        let j = 0;
+        do { j = random(0,256); }while(color[i] == j);
+        color[i] = j;
+      }// this allows user that none of the color on the left will be the same,
+      // maybe can add more algorithm to make sure that all colour will not be the same
+      // i believe should not make that complicated to have a user defined variable in a vector
+      // so, i will remain as first attempt
+
+    
+      if(times % 10 != 0){
+      // every 10 times, we will add a special colorl to the grid instead of the color
+      //each time we draw a square, times++
+        fill(color[0],color[1],color[2]);
+      }
+      else fill(255,0,255);
       square(x,y,squaresize);
+
+      times++;
     }
   }
 }
