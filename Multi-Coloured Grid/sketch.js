@@ -12,11 +12,24 @@ let factor = []; // two solution to solve, by complete or cut square;
 let factor_index = 0; // the index of factor, notice the less the index is, the less the squaersize is since i iterate from small to large
 
 
-let colorchoice = [color(),color(),color(),color()];
+let colorchoice; 
 
 function setup() {
   let size = 3100;// canvans size
   createCanvas(size, size);
+
+  colorchoice = [
+    color(65, 105, 225),   // Royal Blue
+    color(34, 139, 34),    // Forest Green
+    color(147, 112, 219),  // Medium Purple
+    color(178, 34, 34),    // Firebrick
+    color(112, 128, 144),  // Slate Gray
+    color(218, 165, 32),   // Goldenrod
+    color(30, 144, 255),   // Dodger Blue
+    color(186, 85, 211),   // Medium Orchid
+    color(205, 92, 92),    // Indian Red
+    color(70, 130, 180)    // Steel Blue
+  ];
 
   // to ignore the right click
   document.addEventListener("contextmenu", event => event.preventDefault());
@@ -53,9 +66,6 @@ function createGrid(){
   let color = [-1,-1,-1];
   let times = 0;
   let prestrokecolor = 0;
- 
-  
-
 
   for(let x = 0; x < width ;  x+=squaresize){
     
@@ -81,11 +91,10 @@ function createGrid(){
         fill(color[0],color[1],color[2]);
       }
       else{
-
+          let index = int(random(0,colorchoice.length));
+          fill(colorchoice[index]);
       }
-
       square(x,y,squaresize);
-
       times++;
     }
   }
@@ -99,11 +108,8 @@ function keyPressed() {
 function mousePressed() {
   // do the if statement first, since the list is already sort in order,
   // i can do this in whatever i want, go left means size go smaller, vice versa
-
-
   if(mouseButton == LEFT && factor_index <= factor.length - 2 ) squaresize = factor[++factor_index];
-  else if(mouseButton == RIGHT && factor_index >= 1 ) squaresize = factor[--factor_index];
-  
+  else if(mouseButton == RIGHT && factor_index >= 1 ) squaresize = factor[--factor_index]; 
   //if(mouseButton != CENTER) this can avoid do nothing and fill agian when press center, however Mr.scott said it is not needed, thus put as comment
   
   //afrer change it, we redraw the grid
