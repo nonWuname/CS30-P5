@@ -11,6 +11,9 @@ let factor = []; // two solution to solve, by complete or cut square;
 // cut square is not consider anymore
 let factor_index = 0; // the index of factor, notice the less the index is, the less the squaersize is since i iterate from small to large
 
+
+let colorchoice = [color(),color(),color(),color()];
+
 function setup() {
   let size = 3100;// canvans size
   createCanvas(size, size);
@@ -49,14 +52,19 @@ function createGrid(){
   // just use nested loop to create a grid with square and fill with colour
   let color = [-1,-1,-1];
   let times = 0;
-  let len = width / squaresize;
-  let lastrow = [] ; lastrow.length = len;
-  strokeWeight(25);
+  let prestrokecolor = 0;
+ 
   
 
 
   for(let x = 0; x < width ;  x+=squaresize){
-    stroke(23,234,32);
+    
+    // same method as what i did for the color of square, make random stroke weight and color for each column
+    let tempstrokecolor = 0;
+    do { tempstrokecolor = random(0,256); }while( tempstrokecolor == prestrokecolor);
+    stroke(tempstrokecolor,prestrokecolor,(prestrokecolor + tempstrokecolor)%255); 
+    prestrokecolor = tempstrokecolor;
+    strokeWeight(random(0,25));
     for(let y = 0; y <= width; y +=squaresize){;
       for(let i = 0; i < 3; ++i)
       {
@@ -67,14 +75,15 @@ function createGrid(){
       // maybe can add more algorithm to make sure that all colour will not be the same
       // i believe should not make that complicated to have a user defined variable in a vector
       // so, i will remain as first attempt
-
-    
       if(times % 10 != 0){
-      // every 10 times, we will add a special colorl to the grid instead of the color
+      // every 10 times, we will add a special color to the grid instead of the color made by random
       //each time we draw a square, times++
         fill(color[0],color[1],color[2]);
       }
-      else fill(255,0,255);
+      else{
+
+      }
+
       square(x,y,squaresize);
 
       times++;
