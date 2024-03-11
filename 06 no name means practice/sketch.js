@@ -16,11 +16,9 @@ function firstex(){
   
 
   let radius_change = noise(radiustime)
-  radiustime += 0.01;
-  let a = map(radius_change,0,1,-4,5.5);
-  inner = abs(inner + a);
-  if(inner < 10) inener = 40;
-  if(inner > 235) inner = 40;
+  radiustime += 0.03;
+  radius_change = map(radius_change,0,1,-4,4);
+  inner = abs(inner + radius_change);
   fill(0,0,255);
   circle(width/2,height/2,inner+60);
   
@@ -34,4 +32,5 @@ function firstex(){
 function draw() {
   background(220);
   firstex();
+  print(inner);
 }
