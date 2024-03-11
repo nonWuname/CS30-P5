@@ -34,10 +34,10 @@ function semgmentLine(){
 function moveBall(){
   
   stroke(0),strokeWeight(1);
-  yspeed = noise(balltime);
-  balltime += 0.01;
-  bally = map(yspeed,0,1,-100,100);
 
+  
+  bally = map(noise(balltime),0,1,-100,100);
+  balltime += 0.01;
   circle(width*0.7,bally,30);
 }
 
