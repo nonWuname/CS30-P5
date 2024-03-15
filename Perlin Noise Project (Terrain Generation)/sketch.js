@@ -87,7 +87,6 @@ function generateTerrain(temprecttime){
     line(position[_],lineheight, position[_+1] ,lineheight)
   }
 }
-
 function drawFlag(x, y){
   // pretty easy function, just draw a flag;
   // with right triangle
