@@ -86,7 +86,7 @@ function generateTerrain(temprecttime){
     stroke(map(noise(_+localrectHeight),0,1,0,255),map(noise(_+localrectHeight+1),0,1,0,255),map(noise(_+localrectHeight+2),0,1,0,255));
     line(position[_],lineheight, position[_+1] ,lineheight)
   }
-}
+} 
 function drawFlag(x, y){
   // pretty easy function, just draw a flag;
   // with right triangle
