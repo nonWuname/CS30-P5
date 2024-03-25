@@ -119,12 +119,12 @@ function draw(){
     fill(0);
     circle(width-height/5,height/10,height/10);
   }
-  recttime += 0.035;
+  recttime += 0.01;
   generateTerrain(recttime,1);
 
-  recttime1 += 0.07;
+  recttime1 += 0.045;
   generateTerrain(recttime1,2);
 
-  recttime2 += 0.14;
+  recttime2 += 0.1;
   generateTerrain(recttime2,3);
 }
