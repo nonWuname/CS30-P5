@@ -10,12 +10,18 @@
 
 // can't do random before set up
 let start,y_height;
+let choice;
 // my color set
 let colors = ['#00A8C6','#40C0CB','#AEE239','#F38630','#F9F2E7','#351330','#424254','#64908A'];
 
 function setup() {
   // can't use screen width and height since if it is too large, then the graph will be terrible
-  createCanvas(749,383);
+  
+
+  choice = 1;
+
+  if(choice == 0)createCanvas(749,383);
+  createCanvas(800,800);
 
   background(220);
   // used degree mode since its range is better
@@ -38,7 +44,8 @@ function setup() {
   // }
 
   // call bigwave to execute and finish the assignment
-  bigwave();
+  if(choice == 0)bigwave();
+  else if(choice == 1) increase_wave();
 
 }
 
@@ -74,4 +81,16 @@ function wave(shrink_of_x,expand_of_y){
     let y = expand_of_y * sin(x * shrink_of_x);
     point(x,y);
   }
+}
+
+function increase_wave(){
+  let shirnk_inc = 1;
+  for(let temp = start; temp < width;){
+    let expand = int(random(5,11));
+    combowave(shirnk_inc,expand);
+    translate(360/shirnk_inc,0);
+    temp = temp + 360/shirnk_inc;
+    shirnk_inc *= 2;
+  }
+
 }
