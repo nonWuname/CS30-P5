@@ -17,11 +17,11 @@ let colors = ['#00A8C6','#40C0CB','#AEE239','#F38630','#F9F2E7','#351330','#4242
 function setup() {
   // can't use screen width and height since if it is too large, then the graph will be terrible
   
+  //choose which method to be used to draw the wave
+  choice = int(random(2));
 
-  choice = 1;
+  createCanvas(749,383);
 
-  if(choice == 0)createCanvas(749,383);
-  createCanvas(800,800);
 
   background(220);
   // used degree mode since its range is better
@@ -84,13 +84,16 @@ function wave(shrink_of_x,expand_of_y){
 }
 
 function increase_wave(){
+  // the function that similar to original wave
+  // this function allow user to create a wave that is linear(actually, 2^x, exponential growth) growth
+  // the period of single wave will become smaller and smaller
   let shirnk_inc = 1;
   for(let temp = start; temp < width;){
-    let expand = int(random(5,11));
+    let expand = int(random(10,20));
     combowave(shirnk_inc,expand);
     translate(360/shirnk_inc,0);
     temp = temp + 360/shirnk_inc;
     shirnk_inc *= 2;
   }
-
 }
+
