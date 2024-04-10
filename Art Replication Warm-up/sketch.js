@@ -18,7 +18,7 @@ function setup() {
   // can't use screen width and height since if it is too large, then the graph will be terrible
   
   //choose which method to be used to draw the wave
-  choice = int(random(2));
+  choice = 1;
 
   createCanvas(749,383);
 
@@ -77,7 +77,7 @@ function wave(shrink_of_x,expand_of_y){
   // the starting point of this program(single wave), and in my old method, i need have bunch of unnecessary parameter;
   // less parameter, easy to fix hence i apply new method;
   let period = 360/shrink_of_x;
-  for(let x=0; x <= period; x+=0.1){
+  for(let x=0; x <= period; x+=1){
     let y = expand_of_y * sin(x * shrink_of_x);
     point(x,y);
   }
@@ -88,8 +88,8 @@ function increase_wave(){
   // this function allow user to create a wave that is linear(actually, 2^x, exponential growth) growth
   // the period of single wave will become smaller and smaller
   let shirnk_inc = 1;
-  for(let temp = start; temp < width;){
-    let expand = int(random(10,20));
+  for(let temp = start; temp < width - start * 2;){
+    let expand = 4;
     combowave(shirnk_inc,expand);
     translate(360/shirnk_inc,0);
     temp = temp + 360/shirnk_inc;
