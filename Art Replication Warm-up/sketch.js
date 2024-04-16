@@ -12,13 +12,14 @@
 let start,y_height;
 let choice;
 // my color set
-let colors = ['#00A8C6','#40C0CB','#AEE239','#F38630','#F9F2E7','#351330','#424254','#64908A'];
+let colors = ['#00A8C6','#40C0CB','#AEE239','#F38630','#351330','#424254','#64908A'];
+let previous = -1;
 
 function setup() {
   // can't use screen width and height since if it is too large, then the graph will be terrible
   
   //choose which method to be used to draw the wave
-  choice = 1;
+  choice = int(random(2));
 
   createCanvas(749,383);
 
@@ -63,14 +64,18 @@ function bigwave(){
 function combowave(shrink_of_x,expand_of_y){
   // a function that call wave() to generate mutiple wave
   // in a vertical line and different colour for different combowave
-  let mycolour = int(random(0,colors.length));  
+  let mycolour;
+  // a new way i add to ensure no two adjacent wave shall be same colour
+  do {mycolour = int(random(0,colors.length));}while(mycolour == previous);
   stroke(colors[mycolour]);
-  for(let tempheight = 0; tempheight < height - 2 * y_height; tempheight+=3){ 
+
+  for(let tempheight = 0; tempheight < height - 2 * y_height; tempheight+=4){ 
     push();
     translate(0,tempheight)
     wave(shrink_of_x,expand_of_y);
     pop();
   }
+  previous = mycolour;
 }
 
 function wave(shrink_of_x,expand_of_y){
@@ -88,12 +93,14 @@ function increase_wave(){
   // this function allow user to create a wave that is linear(actually, 2^x, exponential growth) growth
   // the period of single wave will become smaller and smaller
   let shirnk_inc = 1;
-  for(let temp = start; temp < width - start * 2;){
-    let expand = 4;
+  let mutiple = 1;
+  let times = int(random(3,8));
+  let expand = 5;
+  for(let _ = 0; _ <= times; ++_){
     combowave(shirnk_inc,expand);
     translate(360/shirnk_inc,0);
-    temp = temp + 360/shirnk_inc;
-    shirnk_inc *= 2;
+    shirnk_inc = mutiple * 3;
+    mutiple++;
+    
   }
 }
-
