@@ -7,39 +7,91 @@
 
 let carsize_x = 50 , carsize_y = 20;
 
-let upperSpeed = 14 , lowerSpeed = 4;
+let upperSpeed = 20 , lowerSpeed = 0;
 
 let travel_east = [];
 let trave_west = [];
 
 let linesize = 10;
 
-let condition = 0;
+let flashcondition = 0;// condition for flash
 
-const UNFLASH = 0; const FLASH = 1;
+let carCondition = 0;// boolean for the car to move or not
+
+let redFrame = 0; // for record the frame time for red
+let yellowFrame; // for record the frame time for yellow
+
+
+
 
 // p5 js suggest me to not use LEFT and Right
 // this is the const i used for differnt symbol
 // rather than 1 and 0 to show the boolean expression
 // RIGHT_MY is more good to look and understand
-const RIGHT_MY = 0; const LEFT_my = 1;
+const RIGHT_MY = 0; const LEFT_MY = 1;
 const SMALL_CAR = 0; const VAN = 1;
+const RED_MY = 0, GREEN_MY = 1, YELLOW_MY = 2;
+const UNFLASH = 0; const FLASH = 1;
+const TRAVEL = 0, CREEP = 1,STOP = 2;
 
-class Mycar{
-  
+let traffic;
 
+class TrafficLight{
+
+  constructor(type){
+    this.type = type;
+  }
+
+  display(){
+    // main body
+    fill(0);
+    rect(width -100, 0,100,200);
+    
+  // --- three light
+  if(this.type == RED_MY){//red
+    fill(255,0,0); 
+    carCondition = STOP;
+  } 
+  else fill(255);
+  circle(width - 50,40,50);
+  //---------------
+  //----------------
+  if(this.type == YELLOW_MY){//yellow
+    fill(255,255,0);
+    carCondition = CREEP;
+  }
+  else fill(255);
+  circle(width -50, 100,50);
+  //--------------------------
+  //----------------
+  if(this.type == GREEN_MY){
+    fill(0,255,0);
+    carCondition = TRAVEL;
+  } 
+  else fill(255);
+  circle(width-50, 160,50);
+  }
+  //-------------
+  //----------------
+
+
+}
+
+
+class Mycar{  
   constructor(type,direction){
     this.type = type;
     this.color = color(int(random(255)),int(random(255)),int(random(255))); 
     if(direction == RIGHT){// upper section to move east(right)
       this.y = int(random(height/4 + 30,height/2 - 30));
     }
-    else if (direction == LEFT_my){
+    else if (direction == LEFT_MY){
       this.y = int(random(height/2 + 30,height * 3 / 4 - 30));
     }
     this.x = random(0,width);
     this.direction = direction;
     this.xSpeed = int(random(lowerSpeed,upperSpeed));
+    this.buffer = 3;
   }
 
   display(){
@@ -49,8 +101,8 @@ class Mycar{
     if(this.type == SMALL_CAR){
       rect(this.x,this.y,carsize_x,carsize_y);//main body 
       fill(255);//fill tire
-      rect(this.x+4,this.y-5,carsize_x-40,carsize_y-15);//LEFT_my up
-      rect(this.x+4,this.y+carsize_y,carsize_x-40,carsize_y-15);//LEFT_my down
+      rect(this.x+4,this.y-5,carsize_x-40,carsize_y-15);//LEFT_MY up
+      rect(this.x+4,this.y+carsize_y,carsize_x-40,carsize_y-15);//LEFT_MY down
       rect(this.x + carsize_x -14, this.y-5,carsize_x-40,carsize_y-15);// right up
       rect(this.x + carsize_x -14,this.y+carsize_y, carsize_x-40,carsize_y-15);//right down
     }
@@ -61,21 +113,22 @@ class Mycar{
   }
   
   move(){
-    if(this.direction == RIGHT)this.x += this.xSpeed;
-    if(this.direction == LEFT_my)this.x -= this.xSpeed;
+    this.totalspeed = this.buffer + this.xSpeed;
+    if(this.direction == RIGHT)this.x += this.totalspeed;
+    else if(this.direction == LEFT_MY)this.x -= this.totalspeed;
   }
 
   check(){
     if(this.direction == RIGHT && this.x > width)this.x = 0;
-    else if(this.direction == LEFT_my && this.x < 0)this.x = width;
+    else if(this.direction == LEFT_MY && this.x < 0)this.x = width;
   }
 
   speedDown(){
-    if(this.xSpeed > lowerSpeed && percent_1())this.xSpeed -= 1;
+    if(this.totalspeed > lowerSpeed && percent_1())this.xSpeed -= 1;
   }
 
   speedUp(){
-    if(this.xSpeed < upperSpeed && percent_1()) this.xSpeed += 1;
+    if(this.totalspeed < upperSpeed && percent_1()) this.xSpeed += 1;
   }
 
   ChangeColor(){
@@ -83,20 +136,35 @@ class Mycar{
   }
 
   flash(){
-    this.xSpeed = 40;
+    this.buffer = 40;
   }
 
   unflash(){
-    this.xSpeed = int(random(lowerSpeed,upperSpeed));
+    this.buffer = 3;
+  }
+
+  creep(){
+    if(this.totalspeed > lowerSpeed)this.buffer-= 0.1;
+  }
+  uncreep(){
+    this.buffer = 3;
   }
 
   action(){
     this.check();
     this.display();
-    this.move();
-    this.speedDown();
-    this.speedUp();
-    this.ChangeColor();
+    if(carCondition == TRAVEL)
+    {
+      this.move();
+      this.speedDown();
+      this.speedUp();
+      this.ChangeColor();
+    }
+    if(carCondition == CREEP){
+      this.move();
+      this.creep();
+      //print("speed is",this.totalspeed)
+    }
   }
 }
 
@@ -109,31 +177,67 @@ function setup() {
     travel_east.push(new Mycar(int(random(0,2)),RIGHT));
   }
   
-  // for the car to travel west(LEFT_my)
+  // for the car to travel west(LEFT_MY)
   for(let _ = 0 ; _ < 20; ++_){
-    trave_west.push(new Mycar(int(random(0,2)),LEFT_my));
+    trave_west.push(new Mycar(int(random(0,2)),LEFT_MY));
   }
  
   // int(random(0,2) is either 0 -> SMALL_CAR ; 1 -> VAN
+
+
+  traffic = new TrafficLight(GREEN_MY);
 }
 
 function draw() {
   // init canavas
   drawRoad();
   
-  // just action
+  // just action for all
   Myloop('action');
   
   if(keyIsDown(CONTROL)){
-    condition = FLASH;
+    flashcondition = FLASH;
     Myloop('flash');
   }
 
-  if(condition == FLASH && !keyIsDown(CONTROL)) {
-    condition = UNFLASH;
+  if(flashcondition == FLASH && !keyIsDown(CONTROL)) {
+    flashcondition = UNFLASH;
     Myloop('unflash');
   }
-  print(condition);
+  // check print(condition);
+
+  // for traffic
+  traffic.display();
+  if(frameCount % 500 == 0){
+    yellowFrame = frameCount;
+    carCondition = CREEP;
+    traffic.type = YELLOW_MY;
+  }
+  
+
+  print("frame - yellow",frameCount - yellowFrame);
+  print("frame - red",frameCount - redFrame);
+  
+  if(frameCount - yellowFrame >= 120){
+    carCondition = STOP;
+    traffic.type = RED_MY;
+    redFrame = frameCount;
+  }
+
+
+  if(frameCount - redFrame >= 210){
+    carCondition = TRAVEL;
+    traffic.type = GREEN_MY;
+    Myloop("uncreep");
+  }
+
+  if(carCondition == TRAVEL){
+    yellowFrame = frameCount;
+    redFrame = yellowFrame;
+  }
+  if(carCondition == STOP){
+    yellowFrame = frameCount;
+  }
 }
 
 
@@ -165,16 +269,15 @@ function percent_1(){
 }
 
 function mouseClicked(){
-
   // add car in trave west
   if(mouseButton === LEFT && keyIsDown(SHIFT)) {
-    print('check west')
-    trave_west.push(new Mycar(int(random(0,2)),LEFT_my));
+    // check print('check west')
+    trave_west.push(new Mycar(int(random(0,2)),LEFT_MY));
   }
 
   // add car in trave east
   else if (mouseButton === LEFT) {
-    print('check')
+    // check print('check')
     travel_east.push(new Mycar(int(random(0,2)),RIGHT));
   }
 
@@ -184,10 +287,13 @@ function mouseClicked(){
   // in screen
 
   // also a bug, mouseButton === LEFT && keyIsDown(SHIFT) should consider first
+  // can used with other logic
 }
 
 
 function Myloop(type){
+  // loop for all class to make draw function more clear
+  // just give a string, this function will help me to do loop
   if(type == 'action'){
     for(let it of trave_west){
       it.action()
@@ -214,5 +320,12 @@ function Myloop(type){
       it.unflash();
     }
   }
-  
+  if(type == 'uncreep'){
+    for(let it of trave_west){
+      it.uncreep()
+    }
+    for(let it of travel_east){
+      it.uncreep();
+    }
+  }
 }
