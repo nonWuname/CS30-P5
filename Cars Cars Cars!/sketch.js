@@ -12,15 +12,17 @@ let upperSpeed = 20 , lowerSpeed = 0;
 let travel_east = [];
 let trave_west = [];
 
-let linesize = 10;
+let linesize = 10; // a var i used to draw the line
+// better to not  adjust it since this is good for this portion
 
 let flashcondition = 0;// condition for flash
 
 let carCondition = 0;// boolean for the car to move or not
 
+let traffic;
 let redFrame = 0; // for record the frame time for red
-let yellowFrame; // for record the frame time for yellow
-
+let yellowFrame = 0; // for record the frame time for yellow
+let greenFrame = 0; // for record the frame time for green
 
 
 
@@ -34,7 +36,7 @@ const RED_MY = 0, GREEN_MY = 1, YELLOW_MY = 2;
 const UNFLASH = 0; const FLASH = 1;
 const TRAVEL = 0, CREEP = 1,STOP = 2;
 
-let traffic;
+
 
 class TrafficLight{
 
@@ -74,6 +76,48 @@ class TrafficLight{
   //-------------
   //----------------
 
+  command(){
+    //check diff between each frame
+    //print('frame - green',frameCount - greenFrame);
+    //print("frame - yellow",frameCount - yellowFrame);
+    //print("frame - red",frameCount - redFrame);
+
+
+    //green
+    if(frameCount - greenFrame >= 360){
+      yellowFrame = frameCount;
+      carCondition = CREEP;
+      traffic.type = YELLOW_MY;
+    }
+    // yellow
+    if(frameCount - yellowFrame >= 120){
+      carCondition = STOP;
+      traffic.type = RED_MY;
+      redFrame = frameCount;
+    }
+    //red
+    if(frameCount - redFrame >= 240){
+      carCondition = TRAVEL;
+      traffic.type = GREEN_MY;
+      Myloop("uncreep");
+    }
+
+    // update each frame in diff condition;
+    // ex. in travel, update all the frame except greenFrame
+    // this make a perioidc changing
+    if(carCondition == TRAVEL){
+      yellowFrame = frameCount;
+      redFrame = yellowFrame;
+    }
+    else if (carCondition == CREEP){
+      greenFrame = frameCount;
+      redFrame = frameCount;
+    }
+    else if(carCondition == STOP){
+      yellowFrame = frameCount;
+      greenFrame = frameCount;
+    }
+  }
 
 }
 
@@ -82,10 +126,10 @@ class Mycar{
   constructor(type,direction){
     this.type = type;
     this.color = color(int(random(255)),int(random(255)),int(random(255))); 
-    if(direction == RIGHT){// upper section to move east(right)
+    if(direction == RIGHT_MY){// upper section to move east(right)
       this.y = int(random(height/4 + 30,height/2 - 30));
     }
-    else if (direction == LEFT_MY){
+    else if (direction == LEFT_MY){// lower section to move west(left)
       this.y = int(random(height/2 + 30,height * 3 / 4 - 30));
     }
     this.x = random(0,width);
@@ -95,6 +139,8 @@ class Mycar{
   }
 
   display(){
+    // draw vehicle
+    // draw different vehicle with diff type
     stroke(255);
     strokeWeight(2);
     fill(this.color);
@@ -114,12 +160,12 @@ class Mycar{
   
   move(){
     this.totalspeed = this.buffer + this.xSpeed;
-    if(this.direction == RIGHT)this.x += this.totalspeed;
+    if(this.direction == RIGHT_MY)this.x += this.totalspeed;
     else if(this.direction == LEFT_MY)this.x -= this.totalspeed;
   }
 
   check(){
-    if(this.direction == RIGHT && this.x > width)this.x = 0;
+    if(this.direction == RIGHT_MY && this.x > width)this.x = 0;
     else if(this.direction == LEFT_MY && this.x < 0)this.x = width;
   }
 
@@ -144,7 +190,7 @@ class Mycar{
   }
 
   creep(){
-    if(this.totalspeed > lowerSpeed)this.buffer-= 0.1;
+    if(this.totalspeed > lowerSpeed + 0.2)this.buffer-= 0.1;
   }
   uncreep(){
     this.buffer = 3;
@@ -166,15 +212,22 @@ class Mycar{
       //print("speed is",this.totalspeed)
     }
   }
+
+
+  error_check(){
+    if(this.totalspeed < 0){
+      print('ERROR AT ',this.x, ' ', this.y);
+    }
+  }
 }
 
 
 function setup() {
-  createCanvas(windowWidth, windowHeight);
+  createCanvas(1825, 958);
   
   // for the car to travel east(right)
   for(let _ = 0 ; _ < 20; ++_){
-    travel_east.push(new Mycar(int(random(0,2)),RIGHT));
+    travel_east.push(new Mycar(int(random(0,2)),RIGHT_MY));
   }
   
   // for the car to travel west(LEFT_MY)
@@ -194,50 +247,25 @@ function draw() {
   
   // just action for all
   Myloop('action');
-  
+  Myloop('error_check')
+
   if(keyIsDown(CONTROL)){
     flashcondition = FLASH;
     Myloop('flash');
   }
-
   if(flashcondition == FLASH && !keyIsDown(CONTROL)) {
     flashcondition = UNFLASH;
     Myloop('unflash');
   }
-  // check print(condition);
+  // check print(carcondition);
 
   // for traffic
   traffic.display();
-  if(frameCount % 500 == 0){
-    yellowFrame = frameCount;
-    carCondition = CREEP;
-    traffic.type = YELLOW_MY;
-  }
+  traffic.command();
+
+
   
-
-  print("frame - yellow",frameCount - yellowFrame);
-  print("frame - red",frameCount - redFrame);
   
-  if(frameCount - yellowFrame >= 120){
-    carCondition = STOP;
-    traffic.type = RED_MY;
-    redFrame = frameCount;
-  }
-
-
-  if(frameCount - redFrame >= 210){
-    carCondition = TRAVEL;
-    traffic.type = GREEN_MY;
-    Myloop("uncreep");
-  }
-
-  if(carCondition == TRAVEL){
-    yellowFrame = frameCount;
-    redFrame = yellowFrame;
-  }
-  if(carCondition == STOP){
-    yellowFrame = frameCount;
-  }
 }
 
 
@@ -328,4 +356,6 @@ function Myloop(type){
       it.uncreep();
     }
   }
+
+  
 }
