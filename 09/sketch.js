@@ -5,14 +5,19 @@
 // Extra for Experts:
 // - describe what you did to take this project "above and beyond"
 
+let a = [];
+
+
 
 function setup() {
   createCanvas(windowWidth,windowHeight);
-  stroke(0,80);
-  angleMode(DEGREES);
-  background(220);
 
+  for(let _ = 0 ; _ < 1; ++_){
+    a.push(new asdasda());
+  }
 }
+
+
 
 function randomelement(currlen){
   push();
@@ -28,6 +33,31 @@ function randomelement(currlen){
 }
 
 function draw() {
-  translate(width/2,height/2);
-  randomelement(75);
+  for(let it of a){
+    it.change();
+    it.display();
+  }
+}
+
+function mouseClicked()
+{
+  noLoop();
+}
+
+class asdasda{
+
+  constructor(){
+    this.x = int(random(4));
+    this.x1 = int(random(5));
+    this.xtotal = this.x + this.x1;
+  }
+
+  change(){
+    this.x--;
+  }
+
+  display(){
+    print(this.xtotal);
+  }
+
 }

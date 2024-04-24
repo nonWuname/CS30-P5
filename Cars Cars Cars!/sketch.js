@@ -3,23 +3,104 @@
 // 16,4,2024
 //
 // Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// For this first objects assignment, you'll create a Traffic Simulation where each vehicle on the road will be an object created from a Vehicle class you define.
+//Base Requirements (up to 9/10):
+//Create a Road:
+//create a function called drawRoad(), which will draw a black road and dashed white lane dividing line. This function should be called once per frame in draw().
 
+/*
+
+efine your Vehicle class (constructor):
+
+Create a Vehicle class, from which you'll make several Vehicle objects. This class should have the following class properties:
+
+type
+an integer,  0 or 1. This will determine how the vehicle is rendered:
+0 - A Car
+1 - A Truck/Van
+note: The visuals can be quite crude, and don't have to resemble that type of vehicle too closely. The main thing is that the different types are drawn differently.
+For example, here are my two vehicle types:  
+a color.  Used for the primary fill color for that particular vehicle
+x and y position
+a direction (to represent if the vehicle is moving left to right, or vice versa). You could use a number for this (0 - moving left,  1 - moving right)
+xSpeed to track how fast the vehicle is moving horizontally per frame
+
+Expand your Vehicle class (class Functions):
+
+Your vehicle should have the following functions:
+
+display()     renders the vehicle (based on its type property)
+
+move()    updates the x position based on the xSpeed property. If the vehicle exits the side of the Canvas, wrap around to the opposite side.
+
+speedUp()    increase xSpeed slightly (up to a max of 15 or -15, depending on direction)
+
+speedDown()   decrease xSpeed slightly (make sure to not slow down past 0. Vehicles should not be able to change direction)
+
+changeColor()    give the vehicle a new primary color
+
+action()   this will be main function for a Vehicle, which will call all of the other functions with the following frequency:
+
+move()                      every frame
+speedUp()              1% chance to call each frame
+speedDown()       1% chance to call each frame
+changeColor()      1% chance to call each frame
+display()                    every frame
+Before progressing further, I would highly recommend creating one Vehicle type variable and play around with calling .action() on it in draw() to ensure the functionality above is working correctly.
+
+ 
+
+Create Collections of Vehicles
+
+Create two globally-defined arrays at the top of your program:
+
+let eastbound = [];
+let westbound = [];
+in setup(), use loops to push 20 Vehicles into each array:
+
+Vehicles in eastbound should have positive xSpeed values
+Vehicles in westbound should have negative xSpeed values
+You should set the direction property in each Vehicle object accordingly.
+Ensure the y value is random, but will land in the correct lane
+ 
+
+Process the Vehicle Collections
+
+Once you've populated your arrays with many Vehicle objects, it is time to get them driving. 
+
+inside draw() use a loop (one for each array) to access each individual Vehicle object, and call the .action() function for that object.
+
+since .action() calls the other class functions, this is the only line of code that will be needed in the loop.
+
+Once you've done that, the base features should be complete! A sample of what this could look like for you is this:
+*/
+
+// there are some diff in this program, i name the some varible differently, but accomplish same thing(car traffic simulation)
+// method don't have same effect, all explanation above should yield to this program first(when there is a different).
+
+
+
+
+
+
+
+// the x and y coordinate for car
 let carsize_x = 50 , carsize_y = 20;
-
+// same meaning as name
 let upperSpeed = 20 , lowerSpeed = 0;
 
+// car list for car which due  east and west
 let travel_east = [];
 let trave_west = [];
 
 let linesize = 10; // a var i used to draw the line
-// better to not  adjust it since this is good for this portion
+// better to not adjust it since this is good for this portion
 
 let flashcondition = 0;// condition for flash
 
 let carCondition = 0;// boolean for the car to move or not
 
-let traffic;
+let traffic;// for traffic light
 let redFrame = 0; // for record the frame time for red
 let yellowFrame = 0; // for record the frame time for yellow
 let greenFrame = 0; // for record the frame time for green
@@ -30,6 +111,7 @@ let greenFrame = 0; // for record the frame time for green
 // this is the const i used for differnt symbol
 // rather than 1 and 0 to show the boolean expression
 // RIGHT_MY is more good to look and understand
+// ALL the const is same mean as their name
 const RIGHT_MY = 0; const LEFT_MY = 1;
 const SMALL_CAR = 0; const VAN = 1;
 const RED_MY = 0, GREEN_MY = 1, YELLOW_MY = 2;
@@ -41,10 +123,14 @@ const TRAVEL = 0, CREEP = 1,STOP = 2;
 class TrafficLight{
 
   constructor(type){
+    //type for the type of trafficLight(red,green,Yellow)
     this.type = type;
   }
 
+  
   display(){
+    //display the traffic light
+
     // main body
     fill(0);
     rect(width -100, 0,100,200);
@@ -77,11 +163,19 @@ class TrafficLight{
   //----------------
 
   command(){
+    // traffic operation system
+    
     //check diff between each frame
     //print('frame - green',frameCount - greenFrame);
     //print("frame - yellow",frameCount - yellowFrame);
     //print("frame - red",frameCount - redFrame);
 
+
+    // the way i used can be seen as freeze frame;
+    // once it is travel, i will freeze greenFrame;
+    // then, once there diff is 360 frame(6 second),
+    // i will changer trafficlight condition to yellow;
+    // by this, commnad make a automatic operation system
 
     //green
     if(frameCount - greenFrame >= 360){
@@ -124,6 +218,14 @@ class TrafficLight{
 
 class Mycar{  
   constructor(type,direction){
+    // create a object
+    
+    // type for car's type;
+    // color for car's color
+    // direction for car's direction;
+    // xSpeed is the speed and buffer is extra speed
+    // total speed is the sum of xspeed and buffer
+    // x,y is the coordinate
     this.type = type;
     this.color = color(int(random(255)),int(random(255)),int(random(255))); 
     if(direction == RIGHT_MY){// upper section to move east(right)
@@ -136,11 +238,13 @@ class Mycar{
     this.direction = direction;
     this.xSpeed = int(random(lowerSpeed,upperSpeed));
     this.buffer = 3;
+    this.totalspeed = this.buffer + this.xSpeed;
   }
 
   display(){
     // draw vehicle
     // draw different vehicle with diff type
+    // will have diff color
     stroke(255);
     strokeWeight(2);
     fill(this.color);
@@ -159,44 +263,59 @@ class Mycar{
   }
   
   move(){
-    this.totalspeed = this.buffer + this.xSpeed;
+    // move the car
     if(this.direction == RIGHT_MY)this.x += this.totalspeed;
     else if(this.direction == LEFT_MY)this.x -= this.totalspeed;
   }
 
   check(){
+    // for diff direction, i will check to ensure it didn't went off screen
     if(this.direction == RIGHT_MY && this.x > width)this.x = 0;
     else if(this.direction == LEFT_MY && this.x < 0)this.x = width;
   }
 
   speedDown(){
+    // slow down for 1%
     if(this.totalspeed > lowerSpeed && percent_1())this.xSpeed -= 1;
   }
 
   speedUp(){
+    // speed up for 1%
     if(this.totalspeed < upperSpeed && percent_1()) this.xSpeed += 1;
   }
 
   ChangeColor(){
+    // change color for 1%
     if(percent_1()) this.color = color(int(random(255)),int(random(255)),int(random(255)));
   }
 
   flash(){
+    // to make the car flash
     this.buffer = 40;
   }
 
   unflash(){
+    // undo flash
     this.buffer = 3;
   }
 
   creep(){
+    // creep when yellow light
     if(this.totalspeed > lowerSpeed + 0.2)this.buffer-= 0.1;
   }
   uncreep(){
+    // undo creep
     this.buffer = 3;
   }
 
   action(){
+    // constructor is only init once, it won't repeat;
+    // since the total are always change;
+    // i would add this for every action
+    this.totalspeed = this.buffer + this.xSpeed;
+
+    
+    // a function to call all function
     this.check();
     this.display();
     if(carCondition == TRAVEL)
@@ -211,33 +330,44 @@ class Mycar{
       this.creep();
       //print("speed is",this.totalspeed)
     }
+
+    this.bugsolver();
+    this.error_check();
   }
 
+  bugsolver(){
+    //this function help me solve all necessary bug(car run backward)
+    this.totalspeed = abs(this.totalspeed);
+  }
 
   error_check(){
+    // can be disregard, use only when i am develop
+    // now should be delete but i am lazy
+    // i leave it so i don't  need to type again
     if(this.totalspeed < 0){
       print('ERROR AT ',this.x, ' ', this.y);
+      noLoop();
     }
   }
 }
 
 
 function setup() {
+  // same as the name
   createCanvas(1825, 958);
   
-  // for the car to travel east(right)
+  // add the car to travel east(RIGHT_MY)
   for(let _ = 0 ; _ < 20; ++_){
     travel_east.push(new Mycar(int(random(0,2)),RIGHT_MY));
   }
-  
-  // for the car to travel west(LEFT_MY)
+  // add the car to travel west(LEFT_MY)
   for(let _ = 0 ; _ < 20; ++_){
     trave_west.push(new Mycar(int(random(0,2)),LEFT_MY));
   }
  
   // int(random(0,2) is either 0 -> SMALL_CAR ; 1 -> VAN
 
-
+  // make a traffic light with inital condition (green)
   traffic = new TrafficLight(GREEN_MY);
 }
 
@@ -263,9 +393,6 @@ function draw() {
   traffic.display();
   traffic.command();
 
-
-  
-  
 }
 
 
@@ -283,7 +410,7 @@ function drawRoad(){
   
   strokeWeight(6);// the yellow line
   stroke(255,255,0);
-  for(let _ = 0; _ < width - linesize  ; _ = _ + 2 * linesize* 2){
+  for(let _ = 0; _ < width - linesize ; _ = _ + 2 * linesize* 2){
     line(_,height/2,_+linesize,height/2);
   }
 }
@@ -306,7 +433,7 @@ function mouseClicked(){
   // add car in trave east
   else if (mouseButton === LEFT) {
     // check print('check')
-    travel_east.push(new Mycar(int(random(0,2)),RIGHT));
+    travel_east.push(new Mycar(int(random(0,2)),RIGHT_MY));
   }
 
   // a bug to be notice, p5 suggest me to not used RIGHT and LEFT, i use ctr; +f
@@ -356,6 +483,4 @@ function Myloop(type){
       it.uncreep();
     }
   }
-
-  
 }

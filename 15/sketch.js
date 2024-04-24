@@ -15,6 +15,8 @@ let grid =
   [255,255,255,255,255]
 ];
 
+let grid_col;
+
 let dy = [1,-1,0,0];
 let dx = [0,0,1,-1];
 
@@ -23,6 +25,7 @@ const NUM_ROWS = 4; const NUM_COLS = 5;
 
 let point_my;
 
+let mycol = [WHITE,BLACK];
 
 class Pair{
   constructor(y,x){
@@ -33,11 +36,16 @@ class Pair{
 
 function setup() {
   createCanvas(NUM_COLS * squaresize, NUM_ROWS * squaresize);
+
+  for(let _ = 0; _ < grid.length; ++_){
+    for(let _i = 0 ; _i < grid[_].length; ++_i){
+      grid[_][_i] = mycol[int(random(2))];
+    }
+  }
 }
 
 function draw() {
   drawGrid();
-
 }
 
 function drawGrid(){
@@ -53,15 +61,18 @@ function drawGrid(){
 function getlocation(){
   let constrainX = constrain(mouseX,0,width-1);
   let constrainY = constrain(mouseY,0,height-1);
-  
-  point_my = new Pair(int(mouseY / squaresize), int(mouseX / squaresize))
+  point_my = new Pair(int(constrainY / squaresize), int(constrainX / squaresize))
   
 }
 
 function mouseClicked(){
   if(mouseButton == LEFT){
-    getlocation();
-    flip();
+    if(mouseX >= 0 && mouseX < width-1 && mouseY >= 0 && mouseY < height - 1)
+    {
+      getlocation();
+      flip();
+    }
+
   }
   
 }
@@ -77,7 +88,7 @@ function flip(){
     grid[point_my.y][point_my.x] = BLACK;
   }
 
-  temp();
+  neighbor_check();
 
   
 }
@@ -99,9 +110,7 @@ if(grid[point_my.y + dy[_]][point_my.x + dx[_]] == WHITE){
 
 
 */
-
-
-function temp(){
+function neighbor_check(type){
   for(let _ = 0; _ < 4; ++_){
     if((point_my.y + dy[_] >= 0 && point_my.y + dy[_] < NUM_ROWS) && (point_my.x + dx[_] >= 0 && point_my.x + dx[_] < NUM_COLS)){
       if(grid[point_my.y + dy[_]][point_my.x + dx[_]] == WHITE){
@@ -111,5 +120,22 @@ function temp(){
         grid[point_my.y + dy[_]][point_my.x + dx[_]]= WHITE;
       }
     }
+  }
+}
+
+
+function Win_check(){
+  for(let _ = 0; _ < grid.length; ++_){
+    for(let _i = 0 ; _i < grid[_].length; ++_i){
+      if(grid[_][_i] === BLACK) return false;
+    }
+  }
+
+  return true;
+}
+
+function neighbor_display(type){
+  for(let _ = 0; _ < 4; ++_){
+    grid[point_my.y + dy[_]][point_my.x + dx[_]]= BLACK;
   }
 }
