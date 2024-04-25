@@ -98,7 +98,7 @@ let linesize = 10; // a var i used to draw the line
 
 let flashcondition = 0;// condition for flash
 
-let carCondition = 0;// boolean for the car to move or not
+let carCondition = 0;// boolean for the car to move or not(or yellow light)
 
 let traffic;// for traffic light
 let redFrame = 0; // for record the frame time for red
@@ -112,6 +112,7 @@ let greenFrame = 0; // for record the frame time for green
 // rather than 1 and 0 to show the boolean expression
 // RIGHT_MY is more good to look and understand
 // ALL the const is same mean as their name
+// right is direction of the car
 const RIGHT_MY = 0; const LEFT_MY = 1;
 const SMALL_CAR = 0; const VAN = 1;
 const RED_MY = 0, GREEN_MY = 1, YELLOW_MY = 2;
@@ -126,7 +127,7 @@ class TrafficLight{
     //type for the type of trafficLight(red,green,Yellow)
     this.type = type;
   }
-
+  
   
   display(){
     //display the traffic light
@@ -290,7 +291,7 @@ class Mycar{
   }
 
   flash(){
-    // to make the car flash
+    // to make the car in flash mode
     this.buffer = 40;
   }
 
@@ -371,6 +372,9 @@ function setup() {
   traffic = new TrafficLight(GREEN_MY);
 }
 
+
+//------------------------------------------------------------------#
+// main function
 function draw() {
   // init canavas
   drawRoad();
@@ -394,6 +398,7 @@ function draw() {
   traffic.command();
 
 }
+// ----------------------------------------------------------------------#
 
 
 function drawRoad(){
