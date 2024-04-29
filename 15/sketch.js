@@ -28,7 +28,7 @@ let point_my;
 let mycol = [WHITE,BLACK];
 
 class Pair{
-  constructor(y,x){
+  constructor(x,y){
     this.y = y;
     this.x = x;
   }
@@ -62,19 +62,15 @@ function getlocation(){
   let constrainX = constrain(mouseX,0,width-1);
   let constrainY = constrain(mouseY,0,height-1);
   point_my = new Pair(int(constrainY / squaresize), int(constrainX / squaresize))
-  
 }
 
 function mouseClicked(){
   if(mouseButton == LEFT){
     if(mouseX >= 0 && mouseX < width-1 && mouseY >= 0 && mouseY < height - 1)
     {
-      getlocation();
       flip();
     }
-
   }
-  
 }
 
 function flip(){

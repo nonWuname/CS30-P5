@@ -43,9 +43,15 @@ puzzle overlay square   cross puzzle overlay
 Submit your completed project as a zip. Don't forget a comment header and inline comments! (If using my starter code, I will only be grading whether you've commented the functions you implemented yourself!)
 
 */
+const WHITE = 255; const BLACK = 0;
+let dy_cross = [1,-1,0,0];
+let dx_cross = [0,0,1,-1];
+
+let dy_square = [];
+let dx_square = [];
 
 // the data for grid
-let grid;
+let grid = [];
 
 // var for row and column that assign by player
 let row, column;
@@ -55,18 +61,62 @@ let row_bad = 1, col_bad = 1;
 
 let squaresize = 50;//size for square
 
-function setup() {
-  createCanvas(windowWidth, windowHeight);
-  //check below for more detail for each function
-  Get_input();
+let mycol = [WHITE,BLACK];
 
+let point_my;
+
+let cheat_time = 0;
+let wincount = -1;
+
+function setup() {
+  //check below for more detail for each function
+  let decision = int(prompt("What mode do you want to choose, 0 for default mode, press other to make a optional design, the default is 5x5 grid"));
+
+  if(decision === 0){
+    row = 5;
+    column = 5;
+  }
+  else{
+    Get_input();
+  }
+
+  // basic set up, after get input , make it into the array
+  My_set_up();
+
+  point_my = new Pair();
+  createCanvas(column * squaresize, row * squaresize);
 }
 
 function draw() {
-  background(220);
-  print('row is',row);
-  print(column);
+  if(wincount > 0){
+    wincount --;
+  }
+  else if(wincount == 0){
+    prompt(`YOU WIN with ${cheat_time} times cheat`);
+    wincount = -1;
+  }
+  drawGrid();
+  getlocation();
+
 }
+
+function My_set_up(){
+  // make a user scale grid
+  for(let _ = 0; _ < row; ++_){
+    grid.push([]);
+    for(let _i = 0; _i < column; ++_i){
+      grid[_].push(mycol[int(random(2))]);
+    }
+  }
+}
+
+class Pair{
+  constructor(x,y){
+    this.y = y;
+    this.x = x;
+  }
+}
+
 
 function Get_input(){
   // get input for column and row
@@ -75,7 +125,7 @@ function Get_input(){
     row_bad++;
   }while(!Number.isInteger(row));
   do{
-    column = int(prompt(`What numerical value would you like to assign to the row? Please provide an number(i will round to integer). This is your ${col_bad} times!!!!!!`));
+    column = int(prompt(`What numerical value would you like to assign to the column? Please provide an number(i will round to integer). This is your ${col_bad} times!!!!!!`));
     col_bad++;
   }while(!Number.isInteger(column));
 
@@ -105,6 +155,93 @@ function Get_input(){
   }
 }
 
-function My_set_up(){
+function drawGrid(){
+  for(let i = 0; i < row; ++i){
+    for(let j = 0 ; j < column; ++j){
+      fill(grid[i][j]);
+      square(i*squaresize,j*squaresize,squaresize);
+    }
+  }
+}
 
+function getlocation(){
+  let constrainX = constrain(mouseX,0,width-1);
+  let constrainY = constrain(mouseY,0,height-1);
+  point_my = new Pair(int(constrainY / squaresize), int(constrainX / squaresize))
+}
+
+
+function mouseClicked(){
+  if(mouseButton == LEFT){
+    if(mouseX >= 0 && mouseX < width-1 && mouseY >= 0 && mouseY < height - 1)
+    {
+      flip(); 
+      cheat_time ++;
+    }
+  }
+  if(!keyIsDown(SHIFT)){
+    neighbor_check();
+    cheat_time --;
+    if(cheat_time < 0) cheat_time = 0;
+  }
+  if(Win_check()){
+    
+    
+    //noLoop();
+    wincount = 3;
+  }
+  
+
+ 
+}
+
+function flip(){
+  //case 1
+  if(grid[point_my.y][point_my.x] == BLACK){
+    grid[point_my.y][point_my.x] = WHITE;
+    
+  }
+  //case 2
+  else{
+    grid[point_my.y][point_my.x] = BLACK;
+  }
+ 
+  
+}
+
+
+
+// old
+//
+/*
+
+if(grid[point_my.y + dy[_]][point_my.x + dx[_]] == WHITE){
+          grid[point_my.y + dy[_]][point_my.x + dx[_]]= BLACK;
+        }
+        else if(grid[ point_my.y + dy[_]][point_my.x + dx[_]] == BLACK){
+          grid[point_my.y + dy[_]][point_my.x + dx[_]]= WHITE;
+        }
+*/
+function neighbor_check(type){
+  for(let _ = 0; _ < 4; ++_){
+    if((point_my.y + dy_cross[_] >= 0 && point_my.y + dy_cross[_] < row) && (point_my.x + dx_cross[_] >= 0 && point_my.x + dx_cross[_] < column)){
+      if(grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]] == WHITE){
+        grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]]= BLACK;
+      }
+      else if(grid[ point_my.y + dy_cross[_]][point_my.x + dx_cross[_]] == BLACK){
+        grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]]= WHITE;
+      }
+    }
+  }
+}
+
+
+function Win_check(){
+  for(let _ = 0; _ < grid.length; ++_){
+    for(let _i = 0 ; _i < grid[_].length; ++_i){
+      if(grid[_][_i] === BLACK) return false;
+    }
+  }
+
+  return true;
 }
