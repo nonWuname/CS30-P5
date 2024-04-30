@@ -44,11 +44,12 @@ Submit your completed project as a zip. Don't forget a comment header and inline
 
 */
 const WHITE = 255; const BLACK = 0;
+const CROSS_MY = 0; const SQUARE_MY = 1;
 let dy_cross = [1,-1,0,0];
 let dx_cross = [0,0,1,-1];
 
-let dy_square = [];
-let dx_square = [];
+let dy_square = [1,0,1];
+let dx_square = [1,1,0];
 
 // the data for grid
 let grid = [];
@@ -68,6 +69,8 @@ let point_my;
 let cheat_time = 0;
 let wincount = -1;
 
+let flipPattern = CROSS_MY;
+
 function setup() {
   //check below for more detail for each function
   let decision = int(prompt("What mode do you want to choose, 0 for default mode, press other to make a optional design, the default is 5x5 grid"));
@@ -85,6 +88,9 @@ function setup() {
 
   point_my = new Pair();
   createCanvas(column * squaresize, row * squaresize);
+
+
+
 }
 
 function draw() {
@@ -97,7 +103,11 @@ function draw() {
   }
   drawGrid();
   getlocation();
-
+  overlay(flipPattern);
+  if(keyIsDown(32)){
+    if(flipPattern == CROSS_MY)flipPattern = SQUARE_MY;
+    else flipPattern = CROSS_MY;
+  }
 }
 
 function My_set_up(){
@@ -159,7 +169,16 @@ function drawGrid(){
   for(let i = 0; i < row; ++i){
     for(let j = 0 ; j < column; ++j){
       fill(grid[i][j]);
-      square(i*squaresize,j*squaresize,squaresize);
+      square(j*squaresize,i*squaresize,squaresize);
+
+
+
+///////// MMMMMMMARK HERE!!!!!!!!!!!!!!!!!!!!!!!!  
+//  square(i*squaresize,j*squaresize,squaresize);
+// create a bug that the overlay cross doesn't match the actual play cross;
+// this is because in drawGrid is square(y,x,size)
+// in overlay it is square(x,y,size)
+// later i change it, it is fine
     }
   }
 }
@@ -167,7 +186,7 @@ function drawGrid(){
 function getlocation(){
   let constrainX = constrain(mouseX,0,width-1);
   let constrainY = constrain(mouseY,0,height-1);
-  point_my = new Pair(int(constrainY / squaresize), int(constrainX / squaresize))
+  point_my = new Pair(int(constrainX / squaresize), int(constrainY / squaresize))
 }
 
 
@@ -179,8 +198,8 @@ function mouseClicked(){
       cheat_time ++;
     }
   }
-  if(!keyIsDown(SHIFT)){
-    neighbor_check();
+  if(!keyIsDown(SHIFT) && mouseX >= 0 && mouseX < width-1 && mouseY >= 0 && mouseY < height - 1){
+    neighbor_check(flipPattern);
     cheat_time --;
     if(cheat_time < 0) cheat_time = 0;
   }
@@ -223,16 +242,32 @@ if(grid[point_my.y + dy[_]][point_my.x + dx[_]] == WHITE){
         }
 */
 function neighbor_check(type){
-  for(let _ = 0; _ < 4; ++_){
-    if((point_my.y + dy_cross[_] >= 0 && point_my.y + dy_cross[_] < row) && (point_my.x + dx_cross[_] >= 0 && point_my.x + dx_cross[_] < column)){
-      if(grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]] == WHITE){
-        grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]]= BLACK;
-      }
-      else if(grid[ point_my.y + dy_cross[_]][point_my.x + dx_cross[_]] == BLACK){
-        grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]]= WHITE;
+  if(type == CROSS_MY){
+    for(let _ = 0; _ < dx_cross.length; ++_){
+      if((point_my.y + dy_cross[_] >= 0 && point_my.y + dy_cross[_] < row) && (point_my.x + dx_cross[_] >= 0 && point_my.x + dx_cross[_] < column)){
+        if(grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]] == WHITE){
+          grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]]= BLACK;
+        }
+        else if(grid[ point_my.y + dy_cross[_]][point_my.x + dx_cross[_]] == BLACK){
+          grid[point_my.y + dy_cross[_]][point_my.x + dx_cross[_]]= WHITE;
+        }
       }
     }
   }
+  
+  else if(type === SQUARE_MY){
+    for(let _ = 0; _ < dx_square.length; ++_){
+      if((point_my.y + dy_square[_] >= 0 && point_my.y + dy_square[_] < row) && (point_my.x + dx_square[_] >= 0 && point_my.x + dx_square[_] < column)){
+        if(grid[point_my.y + dy_square[_]][point_my.x + dx_square[_]] == WHITE){
+          grid[point_my.y + dy_square[_]][point_my.x + dx_square[_]]= BLACK;
+        }
+        else if(grid[ point_my.y + dy_square[_]][point_my.x + dx_square[_]] == BLACK){
+          grid[point_my.y + dy_square[_]][point_my.x + dx_square[_]]= WHITE;
+        }
+      }
+    }
+  }
+
 }
 
 
@@ -245,3 +280,32 @@ function Win_check(){
 
   return true;
 }
+
+
+function overlay(type){
+
+  fill(0,132,233,120);
+  square(point_my.x * squaresize , point_my.y *squaresize,squaresize);
+
+  if(!keyIsDown(SHIFT)){
+    if(type == CROSS_MY){//0 for cross, later i add const, so this is cross
+      for(let _ = 0; _ < 4; ++_){
+        if((point_my.y + dy_cross[_] >= 0 && point_my.y + dy_cross[_] < row) && (point_my.x + dx_cross[_] >= 0 && point_my.x + dx_cross[_] < column)){
+          fill(0,132,233,120);
+          square((point_my.x + dx_cross[_])* squaresize , (point_my.y + dy_cross[_])*squaresize,squaresize);
+       }
+      }
+    }
+  
+    if(type == SQUARE_MY){// 1 for square
+      for(let _ = 0; _ < dx_square.length; ++_){
+        if((point_my.y + dy_square[_] >= 0 && point_my.y + dy_square[_] < row) && (point_my.x + dx_square[_] >= 0 && point_my.x + dx_square[_] < column)){
+          fill(0,132,233,120);
+          square((point_my.x + dx_square[_])* squaresize , (point_my.y + dy_square[_])*squaresize,squaresize);
+        }
+      }
+    }
+  }
+}
+
+

@@ -314,7 +314,7 @@ class Mycar{
     // since the total are always change;
     // i would add this for every action
     this.totalspeed = this.buffer + this.xSpeed;
-
+    this.bugsolver();
     
     // a function to call all function
     this.check();
@@ -332,7 +332,7 @@ class Mycar{
       //print("speed is",this.totalspeed)
     }
 
-    this.bugsolver();
+    
     this.error_check();
   }
 
