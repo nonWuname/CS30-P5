@@ -1,6 +1,3 @@
-don't read me 
+a folder for CS30
 
-This is luke wu and i hope i can keep the folder as neat as possible 
-
-
-ctrl + shift + p;    -> new js project
+not organize in purpose, however i will make it organize in the final project folder
