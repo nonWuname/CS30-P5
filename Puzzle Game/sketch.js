@@ -131,10 +131,7 @@ function draw() {
   drawGrid();
   getlocation();
   overlay(flipPattern);
-  if(keyIsDown(32)){
-    if(flipPattern == CROSS_MY)flipPattern = SQUARE_MY;
-    else flipPattern = CROSS_MY;
-  }
+
 }
 
 function My_set_up(){
@@ -302,7 +299,7 @@ function neighbor_check(type){
 
 
 function Win_check(){
-  // do a win check if only all are Black 
+  // do a win check if only all are white 
   for(let _ = 0; _ < grid.length; ++_){
     for(let _i = 0 ; _i < grid[_].length; ++_i){
       if(grid[_][_i] === BLACK) return false;
@@ -345,9 +342,6 @@ function reset(decision){
   // reset the game 
   
   grid.length = 0;
-  
-  
-  
   if(decision === 0){
     row = 5;
     column = 5;
@@ -363,4 +357,13 @@ function reset(decision){
   wincount = -1;
   row_bad = 1, col_bad = 1;
 
+}
+
+
+function keyPressed(){
+  // to change flip pattern once player pressed space
+  if(keyIsDown(32)){
+    if(flipPattern == CROSS_MY)flipPattern = SQUARE_MY;
+    else flipPattern = CROSS_MY;
+  }
 }
