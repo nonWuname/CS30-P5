@@ -1,0 +1,3 @@
+0 lt left
+1 mid
+2 rt right
