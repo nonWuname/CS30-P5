@@ -8,9 +8,13 @@
 let floorset = [];
 let wallset = [];
 
+let map_arr = [];
 
 
-let temp;
+let init_x = 0, init_y = 0;
+
+
+let mymap;
 
 function preload(){
   
@@ -22,12 +26,15 @@ function preload(){
 
 function setup() {
   createCanvas(24*16,18*16);
-  
+  generateMap_arr();
+  mymap = new Gamemap(map_arr);
+  mymap.init();
 }
 
 function draw() {
-  background(220);
-  image(temp,mouseX,mouseY);
+  clear();
+  mymap.display();
+  
 }
 
 
@@ -39,8 +46,9 @@ function loadAssets(){
     floorset.push(loadImage("assets/floor/" + i + ".png"));
   }
 
-  // load floor spike
-  temp = loadImage("assets\\wall\\simple\\column_wall.png")
+  // load wall
+  wallset.push(loadImage("assets/wall/simple/mid/0.png"));
+  
 
 }
 
@@ -62,11 +70,70 @@ class Ani{
 }
 
 
+class Tile{
 
-function grid(){
-  for(let y = 0; y < height; y+=16){
-    for(let x = 0; x < width; x +=16){
-      image(floorset[int(random(floorset.length))],x,y);
-    }
+  constructor(x,y,state){
+    this.x = x;
+    this.y = y;
+    this.state = state;
   }
+}
+
+function generateMap_arr(){
+  for(let y = 0; y < 30; ++y){
+    let temp = [];
+    for(let x =0; x < 30; ++x){
+      temp.push(floorset[int(random(floorset.length))]);
+    }
+    map_arr.push(temp);
+  }
+}
+
+
+
+function mousePressed() {
+  init_x ++;
+}
+
+class Gamemap{
+
+  constructor(arr){
+    this.arr = arr;
+    this.img;
+  }
+
+  init(){
+    let temp_w = 0,temp_h = 0;
+    
+    // get data
+    for(let y = 0; y < this.arr.length; ++y){
+      temp_h += 16;
+      for(let x = 0; x< this.arr[y].length; ++x){
+        temp_w += 16;
+      }
+    }
+
+    // set up
+    this.img = createImage(temp_w,temp_w);
+    this.img.loadPixels();
+
+    // iterate then make the map
+    for(let y = 0; y < this.arr.length * 16; ++y){
+      for(let x = 0; x< this.arr[int(y/16)].length * 16; ++x){
+        let c;
+        let temp_x = int(x/16); let temp_y =int(y/16);
+        c = this.arr[temp_y][temp_x].get(x%16,y%16); 
+        this.img.set(x,y,c);
+      }
+    }
+    
+
+    this.img.updatePixels();
+  }
+
+  display(){
+    image(this.img.get(init_x,init_y,width,height),0,0);
+  }
+
+
 }
