@@ -1,0 +1,7 @@
+class Ani{
+
+    constructor(){
+  
+    }
+  
+  }
