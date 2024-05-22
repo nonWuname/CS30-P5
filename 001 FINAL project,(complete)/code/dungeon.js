@@ -1,131 +1,128 @@
 
+class Dungeon {
 
-
-class gameMap {
-
-    constructor(){
-        let first = new Room(true);
-        this.map = [[first],[first]];
-        this.originX = 0;
-        this.originY = 0;
+    constructor() {
+        this.map = [];
+        this.size = 9;
+        this.origin = (this.size + 1) / 2;
     }
 
-    setup(){
-        this.bfs(0,0,5);
-    }   
+    setup() {
+        this.grid_ini();
+        this.dfs(this.origin,this.origin,20);
+    }
 
-    bfs(x,y,layer){
-        if(layer < 0) return;
+    dfs(y, x, step) {
+        if (step === 0) return;
 
-        else{
-            let curr_x = x;
-            let curr_y = y;
+        else {
+          
 
-            if(this.check(curr_y,curr_x)){
-                if(curr_x > this.map[curr_y].length){
-                    this.map[curr_y].push(new Room(true));
+            if(this.check(y,x)){
+                if(!this.map[y][x].visited){
+                    this.map[y][x].visited = true;
                 }
-                else if(curr_x < 0){
-                    this.originX ++;
-                    this.map[curr_y].unshift(new Room(true));
-                }
-    
-                if(curr_y > this.map.length){
-                    let temp = [];
-                    for(let _ = 0; _ < this.map[curr_y-1].length; ++_){
-                        temp.push(new Room(false));
-                        if(_ = curr_x){
-                            temp[_].exist = true;
-                        }
-                    }
-                    this.map.push(temp);
-                }
-                else if(curr_y < 0){
-                    this.originY ++;
-                    let temp = [];
-                    for(let _ = 0; _ < this.map[curr_y+1].length; ++_){
-                        temp.push(new Room(false));
-                        if(_ = curr_x){
-                            temp[_].exist = true;
-                        }
-                    }
-                    this.map.unshift(temp);
-                }
-            }
+               
+                else step ++;
+
+            } 
+            else step++;
+            
+            
+           
         }
 
-
-        this.bfs(x,y+1,layer-1);//south
-        this.bfs(x,y-1,layer -1);//north
-        this.bfs(x-1,y,layer-1);//west
-        this.bfs(x+1,y,layer-1);//east
+        this.random_walk(y, x, step);
+ 
 
     }
 
 
-    check(y,x){
-       
-        let state; // 0 for horizontal, 1 for vertical
-        
-
-        print(this.map[y][x]);
-        if(this.map[y][x] === undefined && (this.map[y][x-1] !== undefined ||  this.map[y][x+1] !== undefined )) state = 0;
-        if(this.map[y][x] === undefined && (this.map[y-1][x] !== undefined ||  this.map[y+1][x] !== undefined )) state = 1;
-
-        if( state === 0){
-            if(x > this.map[y].length){
-                this.map[y].push(new Room(true));
-            }
-    
-            else if(x < 0){
-                this.unshift[y].push(new Room(true));
-            }
+    check(y, x) {
+        if(y < this.map.length && y >= 0){
+            if(x < this.map[y].length && x >= 0){
+                return true;
         }
-       
-        else if(state === 1){
-            if(y > this.map.length){
-                let temp = [];
-                for(let _ = 0; _ < this.map[curr_y-1].length; ++_){
-                temp.push(new Room(false));
+        return false;       
+       }
+    }
+    
+    grid_ini(){
+        this.map.length = 0;
+        for (let y = 0; y < this.size; ++y) {
+            let temp = [];
+            for (let x = 0; x < this.size; ++x) {
+                temp.push(new Room());
+            }
+            this.map.push(temp);
+        }
+    }
+
+    display(){
+        for(let y = 0; y < this.map.length; ++y){
+            for(let x = 0; x < this.map[y].length; ++x){
+                if(this.map[y][x].visited){
+                    fill(0);
+                    square(y * 20,x * 20, 20);
                 }
-                temp[x].exist = true
-                this.map.push(temp);
             }
-    
-            else if( y < 0){
-                this.originY ++;
-                let temp = [];
-                for(let _ = 0; _ < this.map[curr_y+1].length; ++_)temp.push(new Room(false));
-                temp[x].exist = true;
-                this.map.unshift(temp);
-            }    
         }
-   
+    }
+
+    random_walk(y,x,step){
+        
+        
+        let direction = [
+            [0,1], // [y,x] , east
+            [-1,0], //  south
+            [0,-1], // west
+            [1,0] // north
+        ]
+            
+        let curr_y,curr_x;
+
 
         
         
+        do{
+            let temp = int(random(4));
+            curr_y = direction[temp][0];
+            curr_x = direction[temp][1];
+
+        }while(this.check(curr_y,curr_x))
+
         
-        if(!this.map[y][x].visited)
-        {
-            this.map[y][x].visited = true;
-            return true
+        switch(temp){
+            case 0:      
+                this.dfs(y + 1, x, step - 1); // north
+                break;
+            case 1:
+                this.dfs(y - 1, x, step - 1); // south
+                break;
+            case 2:
+                this.dfs(y, x - 1, step - 1); // west
+                break;
+            case 3:
+                this.dfs(y, x + 1, step - 1); // east
+                break;
         }
-        return false
+
+        
+    
+    
+    
     }
 }
 
 
 
 
-class Room{
-    constructor(exist){
-        this.img;
-        
+class Room {
+    constructor() {
+        this.img = 0;
         // room condition , n,w,e,s north,west,east,south
-        this.condition;
+        this.condition = -1;
         this.visited = false;
-        this.exist = exist;
-
 
     }
 }

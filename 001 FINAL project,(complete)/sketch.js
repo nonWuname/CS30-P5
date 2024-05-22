@@ -16,33 +16,47 @@ let map1;
 
 
 
-
-
-
 function setup() {
-  createCanvas(24*16,18*16);
+  createCanvas(180,180);
   
+  stroke(255);
   // myplayer = new Player;
   // mymap = new Gamemap();
   // mymap.setup();
 
-   map1 = new gameMap();
-
+   map1 = new Dungeon();
    map1.setup();
+   map1.display();
+
+
+   
 }
 
 function draw() {
 
-  clear();
+  
+  
+  // clear();
 
-  image(temp.get(0,0,48,32),mouseX,mouseY);
+  // image(temp.get(0,0,48,32),mouseX,mouseY);
 }
 
 
 
 function mousePressed() {
-  myplayer.y ++;
-  myplayer.x ++;
+  clear();
+  
+  for(let y = 0; y < 9; ++y){
+    for(let x = 0; x < 9; ++x){
+      fill(255,0,0);
+      square(y * 20,x * 20, 20);
+        
+    }
+}
+  
+  
+  map1.setup();
+  map1.display(); 
 }
 
 
