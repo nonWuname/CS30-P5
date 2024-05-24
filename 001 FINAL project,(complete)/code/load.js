@@ -39,7 +39,7 @@ function loadAssets(){
       let temp;
       temp = img.get(x,0,w,h);
       arr.push(temp);
-      print('sad')
+      
     }
 
   }
