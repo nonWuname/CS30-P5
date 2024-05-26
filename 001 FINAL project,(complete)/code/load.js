@@ -12,7 +12,7 @@ let wallset = [];
 
 
 
-let temp;
+let temp, temp1;
 
 function loadAssets(){
     // a function load all game assets
@@ -30,6 +30,9 @@ function loadAssets(){
 
      temp = loadImage("assets/Heroes/Knight/Death/0.png");
     loadSpriteSheet(temp,48,32,knight);
+
+
+    temp1 = loadImage("assets/hello.png");
   }
   
 

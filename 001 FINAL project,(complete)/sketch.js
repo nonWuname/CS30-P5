@@ -17,7 +17,7 @@ let map1;
 
 
 function setup() {
-  createCanvas(180,180);
+  createCanvas(40*16 + 5 * 16,20 * 16);
   
   stroke(255);
   // myplayer = new Player;
@@ -28,12 +28,12 @@ function setup() {
    map1.setup();
    map1.display();
 
+   background(0)
 
    
 }
 
 function draw() {
-
   
   
   // clear();
@@ -46,12 +46,19 @@ function draw() {
 function mousePressed() {
   clear();
   
-  for(let y = 0; y < 9; ++y){
-    for(let x = 0; x < 9; ++x){
+
+ 
+  
+  for(let y = 0; y < 5; ++y){
+    for(let x = 0; x < 5 ; ++x){
       fill(255,0,0);
-      square(y * 20,x * 20, 20);
+      square(y * 16,x * 16, 16);
         
     }
+
+  
+
+    
 }
   
   
