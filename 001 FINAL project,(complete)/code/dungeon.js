@@ -16,13 +16,15 @@ class Dungeon {
         this.cell = [];
         this.oneWay = [];
 
-        this.index = [this.origin,this.origin];
+        this.index = [this.origin, this.origin];
+        this.bossCell = [];
     }
 
     setup() {
         this.grid_ini();
         this.dfs(this.origin, this.origin, 12);
         this.bfs(this.origin, this.origin);
+        this.generate_boss();
     }
 
     dfs(y, x, step) {
@@ -44,43 +46,55 @@ class Dungeon {
         }
     }
 
-    display() {
-        
+    mini_map() {
 
         push();
-        
-        
+        translate(40 * 16, 0);
+        // reference grid
+        stroke(0);
+        for (let y = 0; y < 5; ++y) {
+            for (let x = 0; x < 5; ++x) {
+                fill(0);
+                square(y * 16, x * 16, 16);
+            }
+        }
 
         for (let y = 0; y < this.map.length; ++y) {
             for (let x = 0; x < this.map[y].length; ++x) {
                 if (this.map[y][x].visited) {
-                    fill(0);
-                    if (y === x && x === this.origin) fill(0, 255, 0);
+
+                    if(y === this.index[0] && x === this.index[1])fill(0,0,255);
+                    else if (y === this.origin && x === this.origin)fill(0, 255, 0);
+                    else if (y === this.bossCell[0][0] && x === this.bossCell[0][1])fill(255, 0, 0)
+                    else if(!this.map[y][x].played) fill(0);
+                    else fill(220)
+
+                    stroke(0);// 0 is black
                     square(x * 16, y * 16, 16);
-                    textSize(10);
-                    text(this.map[y][x].step, x * 16 + 8, y * 16 + 8);
+                    // textSize(10);
+                    // text(this.map[y][x].step, x * 16 + 8, y * 16 + 8);
+                    // noWall
+                    stroke(255);
+                    if (this.map[y][x].noWall[0]) {//n
+                        line((x) * 16, (y) * 16, (x + 1) * 16, (y) * 16);
+                    }
+                    if (this.map[y][x].noWall[1]) {//w
+                        line((x) * 16, (y) * 16, (x) * 16, (y + 1) * 16);
+                    }
+                    if (this.map[y][x].noWall[2]) {//s
+                        line((x) * 16, (y + 1) * 16, (x + 1) * 16, (y + 1) * 16);
+                    }
+                    if (this.map[y][x].noWall[3]) {//e
+                        line((x + 1) * 16, (y) * 16, (x + 1) * 16, (y + 1) * 16);
+                    }
+
                 }
             }
         }
-        
 
-        if(this.oneWay.length > 0){
-            fill(0,0,255);
-            let temp = this.oneWay[this.oneWay.length - 1];
-            let x1 = temp[1],y1 = temp[0];
-            square(x1 * 16, y1 * 16, 16);
-            this.map[y1][x1].condition = `boss`
-        }
-        else{
-            fill(0,0,255);
-            let temp = this.cell[this.cell.length - 1];
-            let x1 = temp[1],y1 = temp[0];
-            square(x1 * 16, y1 * 16, 16);
-        }
-        print(this.cell.length)
         pop();
     }
-    
+
     random_walk(y, x, step) {
 
         let neighborList = [];
@@ -139,14 +153,14 @@ class Dungeon {
                 let next_y = curr[0] + direction[i][0];
                 let next_x = curr[1] + direction[i][1];
 
-                
+
                 this.map[curr[0]][curr[1]].init();// init this img
 
                 if (this.check(next_y, next_x)) {
                     this.map[curr[0]][curr[1]].neighborNum++;
-                    this.map[curr[0]][curr[1]].wall[i] = true;
+                    this.map[curr[0]][curr[1]].noWall[i] = true;
                 }
-                
+
 
                 if (this.in_range(next_y, next_x) && this.map[next_y][next_x].visited && this.map[next_y][next_x].step === -1) {
                     this.map[next_y][next_x].step = this.map[curr[0]][curr[1]].step + 1;
@@ -156,9 +170,9 @@ class Dungeon {
 
         }
 
-        for(let i = 0; i < this.cell.length; ++i){
-            let y1 = this.cell[i][0] ,x1 = this.cell[i][1];
-            if(this.map[y1][x1].neighborNum === 1 && !(y1 === this.origin && x1 === this.origin))this.oneWay.push([y1,x1]);
+        for (let i = 0; i < this.cell.length; ++i) {
+            let y1 = this.cell[i][0], x1 = this.cell[i][1];
+            if (this.map[y1][x1].neighborNum === 1 && !(y1 === this.origin && x1 === this.origin)) this.oneWay.push([y1, x1]);
         }
 
     }
@@ -167,6 +181,23 @@ class Dungeon {
         // check for bfs
         if (this.in_range(y, x) && this.map[y][x].visited) return true;
         return false;
+    }
+
+    generate_boss() {
+        this.bossCell.length = 0;
+
+        if (this.oneWay.length > 0) {
+            let temp = this.oneWay[this.oneWay.length - 1];
+            this.bossCell.push(temp);
+            this.map[temp[0]][temp[1]].type = `boss`;
+        }
+        else {
+            let temp = this.cell[this.cell.length - 1];
+            this.bossCell.push(temp);
+            this.map[temp[0]][temp[1]].type = `boss`;
+        }
+        print(this.cell.length)
+        print('oneway is',this.oneWay, '\ncell is',this.cell)
     }
 }
 
@@ -177,64 +208,65 @@ class Room {
     constructor() {
         this.img;
         // room condition , n,w,s,e north,west,south,east
-        this.wall = [false, false, false, false];
+        this.noWall = [false, false, false, false];
         this.visited = false;
         this.neighborNum = 0;
         this.step = -1;
-        this.condition;
+        this.type;
+        this.played = false;
     }
 
     init() {
-        switch(this.neighborNum){
-            case 1: if(this.wall[0]){//n
+        switch (this.neighborNum) {
+            case 1: if (this.noWall[0]) {//n
 
             }
-            else if(this.wall[1]){//w
-                
-            }
-            else if(this.wall[2]){//s
+            else if (this.noWall[1]) {//w
 
             }
-            else if(this.wall[3]){//e
+            else if (this.noWall[2]) {//s
 
             }
-            break;
-
-            case 2: if(this.wall[0] && this.wall[1]){// n w 
+            else if (this.noWall[3]) {//e
 
             }
-            else if(this.wall[0] && this.wall[2]){ // n s
-                
-            }
-            else if(this.wall[0] && this.wall[3]){// n e
+                break;
+
+            case 2: if (this.noWall[0] && this.noWall[1]) {// n w 
 
             }
-            else if(this.wall[1] && this.wall[2]){// w s
+            else if (this.noWall[0] && this.noWall[2]) { // n s
 
             }
-            else if(this.wall[1] && this.wall[3]){// w e
+            else if (this.noWall[0] && this.noWall[3]) {// n e
 
             }
-            else if(this.wall[2] && this.wall[3]){// s e
+            else if (this.noWall[1] && this.noWall[2]) {// w s
 
             }
-            break;
-
-
-
-            case 3:if(!this.wall[0]){//s w e
-                
-            }
-            else if(!this.wall[1]){// n w e
-                
-            }
-            else if(!this.wall[2]){// n s e
+            else if (this.noWall[1] && this.noWall[3]) {// w e
 
             }
-            else if(!this.wall[3]){ // n w s
+            else if (this.noWall[2] && this.noWall[3]) {// s e
 
             }
-            break;
+                break;
+
+
+
+            case 3: if (!this.noWall[0]) {//s w e
+
+            }
+            else if (!this.noWall[1]) {// n w e
+
+            }
+            else if (!this.noWall[2]) {// n s e
+
+            }
+            else if (!this.noWall[3]) { // n w s
+
+            }
+                break;
 
             case 4: // n w s e
         }
@@ -254,19 +286,19 @@ class Room {
 // enum  bfs
 // if(this.check(curr[0]-1,curr[1])){//n
 //     this.map[curr[0]][curr[1]].neighborNum ++;
-//     this.map[curr[0]][curr[1]].wall[0] = true;
+//     this.map[curr[0]][curr[1]].noWall[0] = true;
 // }
 // if(this.check(curr[0],curr[1]-1)){//w
 //     this.map[curr[0]][curr[1]].neighborNum ++;
-//     this.map[curr[0]][curr[1]].wall[1] = true;
+//     this.map[curr[0]][curr[1]].noWall[1] = true;
 // }
 // if(this.check(curr[0]+1,curr[1])){//s
 //     this.map[curr[0]][curr[1]].neighborNum ++;
-//     this.map[curr[0]][curr[1]].wall[2] = true;
+//     this.map[curr[0]][curr[1]].noWall[2] = true;
 // }
 // if(this.check(curr[0],curr[1]+1)){//e
 //     this.map[curr[0]][curr[1]].neighborNum ++;
-//     this.map[curr[0]][curr[1]].wall[3] = true;
+//     this.map[curr[0]][curr[1]].noWall[3] = true;
 // }
 
 
