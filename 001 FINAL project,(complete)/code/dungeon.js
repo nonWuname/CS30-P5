@@ -199,6 +199,14 @@ class Dungeon {
         print(this.cell.length)
         print('oneway is',this.oneWay, '\ncell is',this.cell)
     }
+
+
+
+    moveIndex(){
+        this.index
+
+        this.map
+    }
 }
 
 
