@@ -62,7 +62,6 @@ class Dungeon {
         for (let y = 0; y < this.map.length; ++y) {
             for (let x = 0; x < this.map[y].length; ++x) {
                 if (this.map[y][x].visited) {
-
                     if(y === this.index[0] && x === this.index[1])fill(0,0,255);
                     else if (y === this.origin && x === this.origin)fill(0, 255, 0);
                     else if (y === this.bossCell[0][0] && x === this.bossCell[0][1])fill(255, 0, 0)
@@ -184,6 +183,8 @@ class Dungeon {
     }
 
     generate_boss() {
+        this.index = [this.origin, this.origin];
+        this.map[this.origin][this.origin].played = true;
         this.bossCell.length = 0;
 
         if (this.oneWay.length > 0) {
@@ -201,12 +202,6 @@ class Dungeon {
     }
 
 
-
-    moveIndex(){
-        this.index
-
-        this.map
-    }
 }
 
 
@@ -214,7 +209,7 @@ class Dungeon {
 
 class Room {
     constructor() {
-        this.img;
+        this.img = roomset[0];
         // room condition , n,w,s,e north,west,south,east
         this.noWall = [false, false, false, false];
         this.visited = false;

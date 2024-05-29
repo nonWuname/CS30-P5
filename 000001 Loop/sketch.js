@@ -33,6 +33,38 @@ function setup() {
 }
 
 function draw() {
+  clear();
+  imageMode(CORNER);
+  let currx = map1.index[1];
+  let curry = map1.index[0];
+ 
+  image(map1.map[curry][currx].img,0,0);
+
+
+  for(let i = 0; i < direction.length; ++i){
+    if(map1.map[curry][currx].played){
+      if(map1.map[curry][currx].noWall[i]){
+        let extra = 0
+        if(i === 3){
+          extra = 1;
+        }
+
+        image(doorset[i], (19 + direction[i][1] * 19 + extra) * 16, (9 + direction[i][0] * 9) * 16);
+
+        
+      }
+    }
+  }
+
+
+
+
+  print(mouseX,mouseY);
+
+
+  
+
+  // check for door
   
   map1.mini_map();
   
@@ -107,6 +139,8 @@ function keyPressed(){
     }
   }
 }
+
+
 
 
 
