@@ -18,8 +18,8 @@ function loadAssets() {
 
   // a function load all game assets
   
-  wallset.push(loadImage("assets/wall.png"));
-  floorset.push(loadImage("assets/floor.png"))
+  wallset.push(loadImage("assets/wall/wall.png"));
+  floorset.push(loadImage("assets/floor/floor.png"))
   // n w s e
   for(let i = 0; i < 4; ++i){
     ClosedDoorset.push(loadImage("assets/ClosedDoor/" + i + '.png') );
