@@ -152,9 +152,6 @@ class Dungeon {
                 let next_y = curr[0] + direction[i][0];
                 let next_x = curr[1] + direction[i][1];
 
-
-                this.map[curr[0]][curr[1]].init();// init this img
-
                 if (this.check(next_y, next_x)) {
                     this.map[curr[0]][curr[1]].neighborNum++;
                     this.map[curr[0]][curr[1]].noWall[i] = true;
@@ -209,7 +206,8 @@ class Dungeon {
 
 class Room {
     constructor() {
-        this.img = roomset[0];
+        this.wall = wallset[0];
+        this.floor = floorset[0];
         // room condition , n,w,s,e north,west,south,east
         this.noWall = [false, false, false, false];
         this.visited = false;

@@ -4,24 +4,26 @@
 
 
 
-let doorset = [];
+let ClosedDoorset = []; 
+let OpenDoorset = []
 
-let roomset = [];
-
+let wallset = []; // 40 x 20
+let floorset = []; // 38 x 17
 
 let temp, temp1;
 
 function loadAssets() {
 
-  doorset.length = 4;
+  
 
   // a function load all game assets
   
-  roomset.push(loadImage("assets/map.png"));
-
+  wallset.push(loadImage("assets/wall.png"));
+  floorset.push(loadImage("assets/floor.png"))
   // n w s e
-  for(let i = 0; i < doorset.length; ++i){
-    doorset[i] = loadImage("assets/ClosedDoor/" + i + '.png');
+  for(let i = 0; i < 4; ++i){
+    ClosedDoorset.push(loadImage("assets/ClosedDoor/" + i + '.png') );
+    OpenDoorset.push(loadImage("assets/Opendoor/" + i + '.png'))
   }
  
 }
