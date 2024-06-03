@@ -39,12 +39,12 @@ class SpecialAni {
   display(direction,condition,x,y){
     const animation = this.aniarr[condition][direction];
 
-    print(this.index);
+
     
 
     if(condition !== 'idle'){
-      if(this.frame % animation.length === 0) this.index++;
-      this.frame ++;
+      if(frameCount % 5 === 0) this.index++;
+
     }
 
     if(condition === 'idle')image(this.aniarr['run'][direction][0],x,y)

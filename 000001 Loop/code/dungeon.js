@@ -50,6 +50,7 @@ class Dungeon {
 
         push();
         translate(40 * 16, 0);
+        rectMode(CORNER);
         // reference grid
         stroke(0);
         for (let y = 0; y < 5; ++y) {

@@ -17,6 +17,9 @@ let floorset = []; // 38 x 17
 
 
 
+
+
+
 function loadAssets() {
 
   
@@ -35,7 +38,12 @@ function loadAssets() {
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
     hero.ani.loadAni('def', ANIDIRECTION[i] , 'assets/main Character/def/' + ANIDIRECTION[i]  + '/' , 5);
   }
-
+  for(let i = 0 ; i < ANIDIRECTION.length; ++i){
+    hero.ani.loadAni('magic', ANIDIRECTION[i] , 'assets/main Character/magic/' + ANIDIRECTION[i]  + '/' , 6);
+  }
+  for(let i = 0 ; i < ANIDIRECTION.length; ++i){
+    hero.ani.loadAni('shoot', ANIDIRECTION[i] , 'assets/main Character/shoot/' + ANIDIRECTION[i]  + '/' , 5);
+  }
   
 
 

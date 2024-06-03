@@ -12,7 +12,7 @@ let map1;
 
 
 
-let hero = new SpecialCharacter(100,100,20,20,new SpecialAni());
+let hero = new SpecialCharacter(100,100,20,20, new SpecialAni());
 
 
 function setup() {
@@ -32,20 +32,19 @@ function setup() {
 function draw() {
   clear();
   
-  let currx = map1.index[1];
-  let curry = map1.index[0];
+
  
 
   imageMode(CORNER);
-  image(map1.map[curry][currx].wall,0,0);
-  image(map1.map[curry][currx].floor,16,32);
+  image(map1.map[map1.index[0]][map1.index[1]].wall,0,0);
+  image(map1.map[map1.index[0]][map1.index[1]].floor,16,32);
 
   for(let i = 0; i < direction.length; ++i){
     imageMode(CENTER);
-    if(map1.map[curry][currx].noWall[i]){
+    if(map1.map[map1.index[0]][map1.index[1]].noWall[i]){
       // ori is 20 , 10; 19.5 and 9 is shift
-      if(map1.map[curry][currx].played)image(OpenDoorset[i], (20 + 19.5 * direction[i][1]) * 16, (10 + 9 * direction[i][0]) * 16);
-      else  image(ClosedDoorset[i], (20 + 19.5 * direction[i][1]) * 16, (10 + 9 * direction[i][0]) * 16);  
+      if(map1.map[map1.index[0]][map1.index[1]].played)image(OpenDoorset[i], (20 + 19.5 * direction[i][1]) * 16, (10 + 9 * direction[i][0]) * 16);
+      else image(ClosedDoorset[i], (20 + 19.5 * direction[i][1]) * 16, (10 + 9 * direction[i][0]) * 16);  
     }
   }
 
@@ -53,37 +52,76 @@ function draw() {
 
   hero.display();
 
-
-
-  if(mouseIsPressed && !map1.map[curry][currx].played){
-    map1.map[curry][currx].played = true;
+  if(mouseIsPressed && !map1.map[map1.index[0]][map1.index[1]].played){
+    map1.map[map1.index[0]][map1.index[1]].played = true;
   }
 
 
+  if(keyIsDown(68)){
 
-  if(keyIsDown(RIGHT_ARROW)){
-    hero.x += 2;
+    if(map1.map[map1.index[0]][map1.index[1]].noWall[3] && map1.map[map1.index[0]][map1.index[1]].played){
+      if(hero.x === 612 && hero.y < 154 && hero.y > 138){
+        hero.x = 28;
+        map1.index[1]++;
+      }
+    }
+
+    if(hero.x < 612 && hero.condition === 'run')hero.x+= 4;
+
     hero.direction = 'right';
     hero.condition = 'run';
   }
-  else if(keyIsDown(LEFT_ARROW)){
-    hero.x-= 2;
+  else if(keyIsDown(65)  ){
+    if(map1.map[map1.index[0]][map1.index[1]].noWall[1] && map1.map[map1.index[0]][map1.index[1]].played){
+      if(hero.x === 28 && hero.y < 154 && hero.y > 138){
+        hero.x = 612;
+        map1.index[1]--;
+      }
+    }
+
+    if(hero.x  > 28 && hero.condition === 'run' ) hero.x-= 4;
     hero.direction = 'left';
     hero.condition = 'run';
   }
-  else if(keyIsDown(UP_ARROW)){
-    hero.y-= 2;
+  else if(keyIsDown(87) ){
+    if(map1.map[map1.index[0]][map1.index[1]].noWall[0] && map1.map[map1.index[0]][map1.index[1]].played){
+      if(hero.y === 12 && hero.x < 330 && hero.x > 308){
+        hero.y = 276;
+        map1.index[0]--;
+      }
+    }
+    
+    if(hero.y > 12  && hero.condition === 'run' ) hero.y -= 4;
     hero.direction = 'up';
     hero.condition = 'run';
   }
-  else if(keyIsDown(DOWN_ARROW)){
-    hero.y+= 2;
+  else if(keyIsDown(83) ){
+    if(map1.map[map1.index[0]][map1.index[1]].noWall[2] && map1.map[map1.index[0]][map1.index[1]].played){
+      if(hero.y === 276 && hero.x < 330 && hero.x > 308){
+        hero.y = 12;
+        map1.index[0]++;
+      }
+    }
+    if(hero.y < 276 && hero.condition !== 'atk' ) hero.y += 4;
+    
     hero.direction = 'down';
     hero.condition = 'run';
   }
+  else if(keyIsDown(76)){
+    hero.condition = 'def';
+  }
+  else if(keyIsDown(74)){
+    hero.condition = 'atk';
+  }
+  else if(keyIsDown(75)){
+    hero.condition = 'magic';
+  }
+  else if(keyIsDown(85)){
+    hero.condition = 'shoot';
+  }
   else hero.condition = 'idle';
 
-
+  print("hero is currently" , hero.condition)
   
 
   // check for door
@@ -114,7 +152,7 @@ function mousePressed() {
 
 function keyPressed(){
   
- 
+  
 }
 
 
@@ -191,3 +229,16 @@ function keyPressed(){
   //     x-=1;
   //   }
   // }
+
+
+
+
+
+
+
+
+
+  // down 308 - 326 , 274
+  // up 308 - 326 , 12
+  // left 28, 144 - 154
+  // right 612, 144 - 154
