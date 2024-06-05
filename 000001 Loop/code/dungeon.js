@@ -200,6 +200,21 @@ class Dungeon {
     }
 
 
+    display(x,y,shiftX, shiftY,drawdoor){
+        imageMode(CORNER);
+        image(this.map[this.index[0] + shiftY][this.index[1] + shiftX].wall,x,y);
+        image(this.map[this.index[0]+ shiftY][this.index[1] + shiftX].floor,x + 16,y + 32);
+      
+        for(let i = 0; i < direction.length; ++i){
+          imageMode(CENTER);
+          if(this.map[this.index[0] + shiftY][this.index[1] + shiftX].noWall[i]){
+            // ori is 20 , 10; 19.5 and 9 is shift
+            if(this.map[this.index[0] + shiftY][this.index[1] + shiftX].played || i === drawdoor)image(OpenDoorset[i], x + (20 + 19.5 * direction[i][1]) * 16, y + (10 + 9 * direction[i][0]) * 16);
+            else image(ClosedDoorset[i], x + (20 + 19.5 * direction[i][1]) * 16, y + (10 + 9 * direction[i][0]) * 16);  
+          }
+        }
+    }
+
 }
 
 
@@ -279,7 +294,87 @@ class Room {
 
 
 
-
+function dungeonDisplay(){
+    if(paning === 0)dungeon.display(dungeonX,dungeonY,0,0,-1);
+    else if(paning === 1 && freezetime > 0){
+      paningstate = 'up';
+    }
+    else if(paning === 2 && freezetime > 0){
+      paningstate = 'left';
+    }
+    else if(paning === 3 && freezetime > 0){
+      paningstate = 'down';
+    }
+    else if(paning === 4 && freezetime > 0){
+      paningstate = 'right';
+    }
+  
+    if(paningstate === 'up'){
+      dungeon.display(dungeonX,-20 * 16 + dungeonY,0,-1,2);// next
+      dungeon.display(dungeonX,dungeonY,0,0,-1); // original display(x,y,shiftX, shiftY,drawdoor)
+      dungeonY += 5;
+      hero.y += 4;
+      hero.condition = 'run';
+      freezetime --;
+      if(freezetime === 0){
+        paningstate = 'null';
+        paning = 0 ;
+        dungeonY = 0;
+        dungeon.index[0] --;
+        hero.y = 276;
+      }
+    }
+    else if(paningstate === 'left'){
+      dungeon.display( -40 * 16 + dungeonX,dungeonY,-1,0,3);// next
+      dungeon.display(dungeonX,dungeonY,0,0,-1); // original display(x,y,shiftX, shiftY,drawdoor)
+      dungeonX += 5;
+      hero.x += 4.5;
+      hero.condition = 'run';
+      freezetime --;
+  
+      if(freezetime === 0){
+        paningstate = 'null';
+        paning = 0 ;
+        dungeonX = 0;
+        hero.x = 612;
+        dungeon.index[1]--;
+  
+      }
+    }
+    else if(paningstate === 'down'){
+      dungeon.display(dungeonX,20 * 16 + dungeonY,0,1,0);// next
+      dungeon.display(dungeonX,dungeonY,0,0,-1); // original display(x,y,shiftX, shiftY,drawdoor)
+      dungeonY -= 5;
+      hero.y -= 4;
+      hero.condition = 'run';
+      freezetime --;
+      if(freezetime === 0){
+        paningstate = 'null';
+        paning = 0 ;
+        dungeonY = 0;
+        dungeon.index[0] ++;
+        hero.y = 12;
+      }
+    }
+    else if(paningstate === 'right'){
+      dungeon.display( 40 * 16 + dungeonX,dungeonY,1,0,1);// next
+      dungeon.display(dungeonX,dungeonY,0,0,-1); // original display(x,y,shiftX, shiftY,drawdoor)
+      dungeonX -= 5;
+      hero.x -= 4.5;
+      hero.condition = 'run';
+      freezetime --;
+  
+      if(freezetime === 0){
+        paningstate = 'null';
+        paning = 0 ;
+        dungeonX = 0;
+        hero.x = 28;
+        dungeon.index[1]++;
+  
+      }
+    }
+  }
+  
 
 
 

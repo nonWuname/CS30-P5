@@ -36,22 +36,6 @@ class SpecialAni {
   }
 
 
-  display(direction,condition,x,y){
-    const animation = this.aniarr[condition][direction];
-
-
-    
-
-    if(condition !== 'idle'){
-      if(frameCount % 5 === 0) this.index++;
-
-    }
-
-    if(condition === 'idle')image(this.aniarr['run'][direction][0],x,y)
-    else image(animation[this.index % animation.length],x,y);
-    
-  }
-
 }
 
 

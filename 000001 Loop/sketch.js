@@ -7,10 +7,17 @@
 
 
 
-let map1;
 
+let dungeon;
 
+// for dungeon coordinate
+let dungeonX = 0, dungeonY = 0;
 
+// for dungeon paning
+let paning = 0;
+let paningstate = 'null';
+
+let freezetime = 0;
 
 let hero = new SpecialCharacter(100,100,20,20, new SpecialAni());
 
@@ -20,9 +27,9 @@ function setup() {
   
  
 
-   map1 = new Dungeon();
-   map1.setup();
-   map1.mini_map();
+   dungeon = new Dungeon();
+   dungeon.setup();
+   dungeon.mini_map();
 
 
 
@@ -32,101 +39,54 @@ function setup() {
 function draw() {
   clear();
   
-
- 
-
-  imageMode(CORNER);
-  image(map1.map[map1.index[0]][map1.index[1]].wall,0,0);
-  image(map1.map[map1.index[0]][map1.index[1]].floor,16,32);
-
-  for(let i = 0; i < direction.length; ++i){
-    imageMode(CENTER);
-    if(map1.map[map1.index[0]][map1.index[1]].noWall[i]){
-      // ori is 20 , 10; 19.5 and 9 is shift
-      if(map1.map[map1.index[0]][map1.index[1]].played)image(OpenDoorset[i], (20 + 19.5 * direction[i][1]) * 16, (10 + 9 * direction[i][0]) * 16);
-      else image(ClosedDoorset[i], (20 + 19.5 * direction[i][1]) * 16, (10 + 9 * direction[i][0]) * 16);  
-    }
-  }
+  dungeonDisplay();
 
 
 
   hero.display();
 
-  if(mouseIsPressed && !map1.map[map1.index[0]][map1.index[1]].played){
-    map1.map[map1.index[0]][map1.index[1]].played = true;
+  if(mouseIsPressed && !dungeon.map[dungeon.index[0]][dungeon.index[1]].played){
+    dungeon.map[dungeon.index[0]][dungeon.index[1]].played = true;
   }
 
-
-  if(keyIsDown(68)){
-
-    if(map1.map[map1.index[0]][map1.index[1]].noWall[3] && map1.map[map1.index[0]][map1.index[1]].played){
-      if(hero.x === 612 && hero.y < 154 && hero.y > 138){
-        hero.x = 28;
-        map1.index[1]++;
-      }
-    }
-
-    if(hero.x < 612 && hero.condition === 'run')hero.x+= 4;
-
-    hero.direction = 'right';
-    hero.condition = 'run';
-  }
-  else if(keyIsDown(65)  ){
-    if(map1.map[map1.index[0]][map1.index[1]].noWall[1] && map1.map[map1.index[0]][map1.index[1]].played){
-      if(hero.x === 28 && hero.y < 154 && hero.y > 138){
-        hero.x = 612;
-        map1.index[1]--;
-      }
-    }
-
-    if(hero.x  > 28 && hero.condition === 'run' ) hero.x-= 4;
-    hero.direction = 'left';
-    hero.condition = 'run';
-  }
-  else if(keyIsDown(87) ){
-    if(map1.map[map1.index[0]][map1.index[1]].noWall[0] && map1.map[map1.index[0]][map1.index[1]].played){
-      if(hero.y === 12 && hero.x < 330 && hero.x > 308){
-        hero.y = 276;
-        map1.index[0]--;
-      }
-    }
-    
-    if(hero.y > 12  && hero.condition === 'run' ) hero.y -= 4;
-    hero.direction = 'up';
-    hero.condition = 'run';
-  }
-  else if(keyIsDown(83) ){
-    if(map1.map[map1.index[0]][map1.index[1]].noWall[2] && map1.map[map1.index[0]][map1.index[1]].played){
-      if(hero.y === 276 && hero.x < 330 && hero.x > 308){
-        hero.y = 12;
-        map1.index[0]++;
-      }
-    }
-    if(hero.y < 276 && hero.condition !== 'atk' ) hero.y += 4;
-    
-    hero.direction = 'down';
-    hero.condition = 'run';
-  }
-  else if(keyIsDown(76)){
-    hero.condition = 'def';
-  }
-  else if(keyIsDown(74)){
-    hero.condition = 'atk';
-  }
-  else if(keyIsDown(75)){
-    hero.condition = 'magic';
-  }
-  else if(keyIsDown(85)){
-    hero.condition = 'shoot';
-  }
-  else hero.condition = 'idle';
+  hero.action();
+  hero.skillAction();
 
   print("hero is currently" , hero.condition)
   
 
   // check for door
   
-  map1.mini_map();
+  dungeon.mini_map();
+  
+
+
+
+  textSize(20);
+
+  rectMode(CORNER)
+  fill(122);
+  rect(40*16,5*16,5*16,15*16);
+  fill(0);
+  rect(40*16,5*16, map(hero.atkFreeze,0,40,0,5*16),3*16);
+  fill(255);
+  text('atk',41.5 * 16, 6.5 * 16);
+
+  fill(0);
+  rect(40*16,8*16, map(hero.defFreeze,0,220,0,5*16),3*16);
+  fill(255);
+  text('def',41.5 * 16, 9.5 * 16);
+
+  fill(0);
+  rect(40*16,11*16, map(hero.shootFreeze,0,200,0,5*16),3*16);
+  fill(255);
+  text('shoot',41.5 * 16, 12.5 * 16);
+  
+  fill(0);
+  rect(40*16,14*16, map(hero.magicFreeze,0,300,0,5*16),3*16);
+  fill(255);
+  text('magic',41.5 * 16, 15.5 * 16);
+
   
   // clear();
 
@@ -143,17 +103,17 @@ function mousePressed() {
   
   
   
-  // map1.setup();
-  // map1.mini_map(); 
+  // dungeon.setup();
+  // dungeon.mini_map(); 
 
 }
 
 
 
 function keyPressed(){
-  
-  
+ 
 }
+
 
 
 
@@ -174,25 +134,14 @@ function keyPressed(){
 
 
 
-
-
-
-
-
-
-
-
-
-
-
   // test for map 
-  //// let x = map1.index[1];
-  // let y = map1.index[0];
+  //// let x = dungeon.index[1];
+  // let y = dungeon.index[0];
   
   // if (keyIsDown(UP_ARROW) === true) {
   //   y -=1;
-  //   if(map1.in_range(y,x) && map1.map[y][x].visited){
-  //     map1.index[0] -=1;
+  //   if(dungeon.in_range(y,x) && dungeon.map[y][x].visited){
+  //     dungeon.index[0] -=1;
       
   //   }
   //   else{
@@ -202,8 +151,8 @@ function keyPressed(){
 
   // if (keyIsDown( DOWN_ARROW) === true) {
   //   y +=1;
-  //   if(map1.in_range(y,x) && map1.map[y][x].visited){
-  //     map1.index[0] +=1;
+  //   if(dungeon.in_range(y,x) && dungeon.map[y][x].visited){
+  //     dungeon.index[0] +=1;
   //   }
   //   else{
   //     y-=1;
@@ -212,8 +161,8 @@ function keyPressed(){
 
   // if (keyIsDown(LEFT_ARROW) === true) {
   //   x -=1;
-  //   if(map1.in_range(y,x) && map1.map[y][x].visited){
-  //     map1.index[1] -=1;
+  //   if(dungeon.in_range(y,x) && dungeon.map[y][x].visited){
+  //     dungeon.index[1] -=1;
   //   }
   //   else{
   //     x+=1;
@@ -222,8 +171,8 @@ function keyPressed(){
 
   // if (keyIsDown(RIGHT_ARROW) === true) {
   //   x +=1;
-  //   if(map1.in_range(y,x) && map1.map[y][x].visited){
-  //     map1.index[1] +=1;
+  //   if(dungeon.in_range(y,x) && dungeon.map[y][x].visited){
+  //     dungeon.index[1] +=1;
   //   }
   //   else{
   //     x-=1;
