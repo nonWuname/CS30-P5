@@ -68,25 +68,30 @@ function draw() {
   fill(122);
   rect(40*16,5*16,5*16,15*16);
   fill(0);
-  rect(40*16,5*16, map(hero.atkFreeze,0,40,0,5*16),3*16);
+  rect(40*16,5*16, 5 * 16 - map(hero.atkFreeze,0,hero.atkFreezeMax,0,5*16),3*16);
   fill(255);
   text('atk',41.5 * 16, 6.5 * 16);
 
-  fill(0);
-  rect(40*16,8*16, map(hero.defFreeze,0,220,0,5*16),3*16);
+  fill(102, 51, 153);
+  rect(40*16,8*16, 5 * 16 - map(hero.defFreeze,0,hero.defFreezeMax,0,5*16),3*16);
   fill(255);
   text('def',41.5 * 16, 9.5 * 16);
 
-  fill(0);
-  rect(40*16,11*16, map(hero.shootFreeze,0,200,0,5*16),3*16);
+  fill(0, 128, 0);
+  rect(40*16,11*16, 5*16 - map(hero.shootFreeze,0,hero.shootFreezeMax,0,5*16),3*16);
   fill(255);
   text('shoot',41.5 * 16, 12.5 * 16);
   
-  fill(0);
-  rect(40*16,14*16, map(hero.magicFreeze,0,300,0,5*16),3*16);
+  fill(135, 206, 235);
+  rect(40*16,14*16, 5 * 16 - map(hero.magicFreeze,0,hero.magicFreezeMax,0,5*16),3*16);
   fill(255);
   text('magic',41.5 * 16, 15.5 * 16);
 
+
+  if(mouseIsPressed){
+    imageMode(CENTER)
+    image(temp,hero.x,hero.y);
+  }
   
   // clear();
 
@@ -99,7 +104,7 @@ function mousePressed() {
   
   
   
- 
+  image(temp,hero.x,hero.y);
   
   
   

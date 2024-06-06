@@ -11,7 +11,7 @@ let wallset = []; // 40 x 20
 let floorset = []; // 38 x 17
 
 
-
+let temp;
 
 
 
@@ -23,7 +23,7 @@ let floorset = []; // 38 x 17
 function loadAssets() {
 
   
-
+  temp = loadImage("assets/0.png")
 
 
 
@@ -58,6 +58,8 @@ function loadAssets() {
     OpenDoorset.push(loadImage("assets/Opendoor/" + i + '.png'))
   }
  
+
+
 }
 
 

@@ -15,21 +15,35 @@ class SpecialCharacter {
     this.y = y;
     this.atk = atk;
     this.hp = hp;
+    this.hpMax = hp;
     this.ani = ani;
 
 
-    this.debug = true;
+    this.debug = false;
 
 
     this.skillActive = false;
     this.skilldemand = 'null';
+    
     this.atkFreeze = 0;
+    this.atkFreezeMax = 40;
     this.defFreeze = 0;
+    this.defFreezeMax = 10;
     this.magicFreeze = 0;
+    this.magicFreezeMax = 300;
     this.shootFreeze = 0;
+    this.shootFreezeMax = 200;
 
     this.direction = "down";
     this.condition = "run";
+
+
+    this.atkwidth = 18;
+    this.atkheight = 24;
+    this.defwidth = 32;
+    this.defheight = 14;
+    this.width = 32;
+    this.height = 46;
   }
 
   setup() {
@@ -65,7 +79,7 @@ class SpecialCharacter {
       if (this.ani.index === this.ani.aniarr[this.condition][this.direction].length) {
         // show the block;
         this.skilldemand = 'null';
-        this.atkFreeze = 40;
+        this.atkFreeze = this.atkFreezeMax;
         this.skillActive = false;
       }
     }
@@ -79,7 +93,7 @@ class SpecialCharacter {
       if (this.ani.index === this.ani.aniarr[this.condition][this.direction].length) {
         // show the block;
         this.skilldemand = 'null';
-        this.defFreeze = 220;
+        this.defFreeze = this.defFreezeMax;
         this.skillActive = false;
       }
     }
@@ -93,7 +107,7 @@ class SpecialCharacter {
       if (this.ani.index === this.ani.aniarr[this.condition][this.direction].length) {
         // show the block;
         this.skilldemand = 'null';
-        this.magicFreeze = 300;
+        this.magicFreeze = this.magicFreezeMax;
         this.skillActive = false;
       }
     }
@@ -107,13 +121,14 @@ class SpecialCharacter {
       if (this.ani.index === this.ani.aniarr[this.condition][this.direction].length) {
         // show the block;
         this.skilldemand = 'null';
-        this.shootFreeze = 200;
+        this.shootFreeze = this.shootFreezeMax;
         this.skillActive = false;
       }
     }
 
     if (this.condition === 'run') {
-      if (frameCount % 4 === 0) this.ani.index++;
+      if (freezetime === 0 && frameCount % 4 === 0) this.ani.index++;
+      else if(freezetime > 0 && frameCount % 7 === 0)this.ani.index ++;
     }
 
     const animation = this.ani.aniarr[this.condition][this.direction];
@@ -126,8 +141,8 @@ class SpecialCharacter {
     else if (this.condition !== 'idle') image(animation[this.ani.index % animation.length], this.x, this.y);
 
 
-    print('current atkfrezze is', this.atkFreeze);
-    print('index is at', this.ani.index);
+    // print('current atkfrezze is', this.atkFreeze);
+    // print('index is at', this.ani.index);
 
 
 
@@ -137,14 +152,49 @@ class SpecialCharacter {
 
       rectMode(CENTER);
       // door detect
-      rect(this.x, this.y + 22, 22, 10);
+      // rect(this.x, this.y + 22, 22, 10);
 
 
       if (mouseIsPressed) {
-        rectMode(CORNER)
+        rectMode(CORNER);
         // monster detecr
-        rect(this.x - 16, this.y - 20, 32, 46)
+        rect(this.x - 16, this.y - 20, this.width, this.height);
       }
+
+
+      if(this.condition === 'atk'){
+        rectMode(CENTER)
+        fill(255,0,0)
+        if(this.direction === 'up'){
+          rect(this.x, this.y + 3 - this.height/2 - this.atkheight/2, this.atkwidth,this.atkheight);
+        }
+        else if(this.direction === 'left'){
+          rect(this.x - this.width/2 - this.atkheight/2, this.y + 10 , this.atkheight, this.atkwidth);
+        }
+        if(this.direction === 'down'){
+          rect(this.x, this.y + 3 + this.height/2 + this.atkheight/2, this.atkwidth,this.atkheight);
+        }
+        else if(this.direction === 'right'){
+          rect(this.x + this.width/2 + this.atkheight/2, this.y + 10 , this.atkheight, this.atkwidth);
+        }
+      }
+      else if(this.condition === 'def'){
+        rectMode(CENTER);
+        fill(255,0,0);
+        if(this.direction === 'up'){
+          rect(this.x, this.y + 3 - this.height/2 - this.defheight/2, this.defwidth,this.defheight);
+        }
+        else if(this.direction === 'left'){
+          rect(this.x - this.width/2 - this.defheight/2, this.y + 10 , this.defheight, this.defwidth);
+        }
+        if(this.direction === 'down'){
+          rect(this.x, this.y + 3 + this.height/2 + this.defheight/2, this.defwidth,this.defheight);
+        }
+        else if(this.direction === 'right'){
+          rect(this.x + this.width/2 + this.defheight/2, this.y + 10 , this.defheight, this.defwidth);
+        }
+      }
+
 
     }
 
@@ -208,7 +258,7 @@ class SpecialCharacter {
   }
 
   skillAction() {
-    if(this.skillActive === false &&  keyIsDown(76) && freezetime === 0 && this.defFreeze === 0) {
+    if(this.skillActive === false &&  keyIsDown(75) && freezetime === 0 && this.defFreeze === 0) {
       this.skillActive = true;
       this.skilldemand = 'def';
       this.ani.index = 0;
@@ -221,13 +271,13 @@ class SpecialCharacter {
       this.ani.frame = 0;
 
     }
-    else if(this.skillActive === false &&  keyIsDown(75) && freezetime === 0 && this.magicFreeze === 0) {
+    else if(this.skillActive === false &&  keyIsDown(85) && freezetime === 0 && this.magicFreeze === 0) {
       this.skillActive = true;
       this.skilldemand = 'magic';
       this.ani.index = 0;
       this.ani.frame = 0;
     }
-    else if( this.skillActive === false &&  keyIsDown(85) && freezetime === 0 && this.shootFreeze === 0) {
+    else if( this.skillActive === false &&  keyIsDown(76  ) && freezetime === 0 && this.shootFreeze === 0) {
       this.skillActive = true;
       this.skilldemand = 'shoot';
       this.ani.index = 0;
