@@ -6,17 +6,17 @@ class Music{
 
     play(){ 
        if(!this.musicarr[this.index].isPlaying()) this.musicarr[this.index].play();
-       if(this.musicarr[this.index].isPlaying()) this.musicarr[this.index].time(300);
+
     }
 
-    shuffle(){
-        if (this.musicarr[this.index].isPlaying()) {
-            this.musicarr[this.index].stop(); 
+    shuffle(index){
+        if (this.musicarr[index].isPlaying()) {
+            this.musicarr[index].stop(); 
         }
         
-        this.index ++;
-        this.index = this.index %  this.musicarr.length;
-        this.musicarr[this.index].play();
+        index ++;
+        index =  index %  this.musicarr.length;
+        this.musicarr[index].play();
     }
 
 

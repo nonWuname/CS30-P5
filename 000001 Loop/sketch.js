@@ -25,6 +25,14 @@ let hero = new SpecialCharacter(100,100,20,20, new SpecialAni());
 let mymusic = new Music();
 
 
+
+let a = new Collider(20*16,10*16,20,20,'rect',0,'null','null',true)//constructor(x,y,width,height,Shapemode,damage,damageType,damageDirection){
+
+
+
+
+
+
 function setup() {
   createCanvas(40*16 + 5 * 16,20 * 16);
   
@@ -35,12 +43,9 @@ function setup() {
    dungeon.mini_map();
 
    for (let i = 0; i < mymusic.musicarr.length; ++i) {
-    mymusic.musicarr[i].onended((function(index) {
-        return function() {
-            mymusic.musicarr[index].shuffle();
-        };
-    })(i));
-}
+    mymusic.musicarr[i].onended( 
+            mymusic.shuffle(i) );
+ }
 
 
 
@@ -78,33 +83,14 @@ function draw() {
 
 
 
-  textSize(20);
-
-  rectMode(CORNER)
-  fill(122);
-  rect(40*16,5*16,5*16,15*16);
-  fill(0);
-  rect(40*16,5*16, 5 * 16 - map(hero.atkFreeze,0,hero.atkFreezeMax,0,5*16),3*16);
-  fill(255);
-  text('atk',41.5 * 16, 6.5 * 16);
-
-  fill(102, 51, 153);
-  rect(40*16,8*16, 5 * 16 - map(hero.defFreeze,0,hero.defFreezeMax,0,5*16),3*16);
-  fill(255);
-  text('def',41.5 * 16, 9.5 * 16);
-
-  fill(0, 128, 0);
-  rect(40*16,11*16, 5*16 - map(hero.shootFreeze,0,hero.shootFreezeMax,0,5*16),3*16);
-  fill(255);
-  text('shoot',41.5 * 16, 12.5 * 16);
-  
-  fill(135, 206, 235);
-  rect(40*16,14*16, 5 * 16 - map(hero.magicFreeze,0,hero.magicFreezeMax,0,5*16),3*16);
-  fill(255);
-  text('magic',41.5 * 16, 15.5 * 16);
+  uiBar();
 
 
- 
+  rectMode(CENTER); 
+  fill(255)
+  if(a.CheckCollision(hero.Skillcollider))fill(255,0,0);
+  a.display();
+
   
   // clear();
 
@@ -134,7 +120,32 @@ function keyPressed(){
 
 
 
+function uiBar(){
+  textSize(20);
 
+  rectMode(CORNER)
+  fill(122);
+  rect(40*16,5*16,5*16,15*16);
+  fill(0);
+  rect(40*16,5*16, 5 * 16 - map(hero.atkFreeze,0,hero.atkFreezeMax,0,5*16),3*16);
+  fill(255);
+  text('atk',41.5 * 16, 6.5 * 16);
+
+  fill(102, 51, 153);
+  rect(40*16,8*16, 5 * 16 - map(hero.defFreeze,0,hero.defFreezeMax,0,5*16),3*16);
+  fill(255);
+  text('def',41.5 * 16, 9.5 * 16);
+
+  fill(0, 128, 0);
+  rect(40*16,11*16, 5*16 - map(hero.shootFreeze,0,hero.shootFreezeMax,0,5*16),3*16);
+  fill(255);
+  text('shoot',41.5 * 16, 12.5 * 16);
+  
+  fill(135, 206, 235);
+  rect(40*16,14*16, 5 * 16 - map(hero.magicFreeze,0,hero.magicFreezeMax,0,5*16),3*16);
+  fill(255);
+  text('magic',41.5 * 16, 15.5 * 16);
+}
 
 
 
