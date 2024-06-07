@@ -17,6 +17,8 @@ class SpecialAni {
     this.index = 0;
     this.frame = 0;
     this.aniarr = {
+      hurt: new FourWayAni(),
+      immune: new FourWayAni(),
       idle: [],
       run: new FourWayAni(),
       die: [],
@@ -34,6 +36,15 @@ class SpecialAni {
     }
 
   }
+
+  SavetimeLoad(condition, direction, location, size, special_condition){
+      const animation = this.aniarr[condition][direction];
+          for (let i = 0; i < size; ++i) {
+              animation.push(loadImage(location + `${direction}` + '_' + `${special_condition}` + '_' + i + '.png'));
+      }
+  
+    }
+  
 
 
 }

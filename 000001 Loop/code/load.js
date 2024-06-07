@@ -25,8 +25,8 @@ function loadAssets() {
 
 
 
-  // a function load all game assets
   
+  // main character
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
     hero.ani.loadAni('run', ANIDIRECTION[i] , 'assets/main Character/run/' + ANIDIRECTION[i]  + '/' , 7);
   }
@@ -42,7 +42,18 @@ function loadAssets() {
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
     hero.ani.loadAni('shoot', ANIDIRECTION[i] , 'assets/main Character/shoot/' + ANIDIRECTION[i]  + '/' , 5);
   }
+
+  // skeleton shielder
+  for(let i = 0 ; i < ANIDIRECTION.length; ++i){
+    skeleton_shielder_ani.SavetimeLoad('run', ANIDIRECTION[i] , 'assets/Skeleton/Shielder/walk/'  , 7, 'walk');
+  }
+  for(let i = 0 ; i < ANIDIRECTION.length; ++i){
+    skeleton_shielder_ani.SavetimeLoad('atk', ANIDIRECTION[i] , 'assets/Skeleton/Shielder/tuci/' , 7, 'tuci');
+  }
   
+  
+
+
 
 
 
@@ -56,9 +67,11 @@ function loadAssets() {
     OpenDoorset.push(loadImage("assets/Opendoor/" + i + '.png'))
   }
  
-
-  mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【本草綱目Chinese Herbal Manual】-Official Music Video.mp3'));
-  mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【霍元甲 Fearless】-Official Music Video.mp3'));
+  for(let i = 0; i < 2; ++i){
+    mymusic.musicarr.push(loadSound('assets/music/' + i  + '.mp3'));
+  }
+  // mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【本草綱目Chinese Herbal Manual】-Official Music Video.mp3'));
+  // mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【霍元甲 Fearless】-Official Music Video.mp3'));
 
 
 }

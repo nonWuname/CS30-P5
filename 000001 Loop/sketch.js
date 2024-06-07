@@ -26,8 +26,14 @@ let mymusic = new Music();
 
 
 
+
+
 let a = new Collider(20*16,10*16,20,20,'rect',0,'null','null',true)//constructor(x,y,width,height,Shapemode,damage,damageType,damageDirection){
 
+
+let skeleton_shielder_ani = new SpecialAni();
+
+let monsterList = [];
 
 
 
@@ -44,8 +50,11 @@ function setup() {
 
    for (let i = 0; i < mymusic.musicarr.length; ++i) {
     mymusic.musicarr[i].onended( 
-            mymusic.shuffle(i) );
+            mymusic.shuffle(i));
  }
+
+
+  monsterList.push(new SpecialCharacter(32,32,10,10,skeleton_shielder_ani));
 
 
 
@@ -73,6 +82,8 @@ function draw() {
   hero.action();
   hero.skillAction();
 
+  monsterList[0].display(); 
+
   print("hero is currently" , hero.condition)
   
 
@@ -95,6 +106,10 @@ function draw() {
   // clear();
 
   // image(temp.get(0,0,48,32),mouseX,mouseY);
+
+  image(skeleton_shielder_ani.aniarr['run']['right'][skeleton_shielder_ani.index % 7],mouseX,mouseY);
+  if(frameCount % 7 === 0)skeleton_shielder_ani.index ++;
+
 }
 
 

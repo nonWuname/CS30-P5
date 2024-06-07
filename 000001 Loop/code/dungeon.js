@@ -327,8 +327,8 @@ function dungeonDisplay(){
     else if(paningstate === 'left'){
       dungeon.display( -40 * 16 + dungeonX,dungeonY,-1,0,3);// next
       dungeon.display(dungeonX,dungeonY,0,0,-1); // original display(x,y,shiftX, shiftY,drawdoor)
-      dungeonX += 10;
-      hero.x += 9;
+      dungeonX += 5;
+      hero.x += 4;
       hero.condition = 'run';
       freezetime --;
   

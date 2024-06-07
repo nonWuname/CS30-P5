@@ -33,12 +33,15 @@ class SpecialCharacter {
     this.magicFreezeMax = 300;
     this.shootFreeze = 0;
     this.shootFreezeMax = 200;
+    this.immuneFreeze = 0;
+    this.immuneFreezeMax = 120;
 
     this.direction = "down";
     this.condition = "run";
 
 
     this.Skillcollider = new Collider(0,0,0,0,'rect',0,'null','null',false);
+    this.selfcollider = new Collider(this.x,this.y,32,46,'rect',0,'null','null',true);
 
     this.atkwidth = 18;
     this.atkheight = 24;
@@ -46,14 +49,19 @@ class SpecialCharacter {
     this.defheight = 14;
     this.width = 32;
     this.height = 46;
+
   }
 
   setup() {
 
   }
 
+ 
 
   display() {
+
+    this.selfcollider.x = this.x;
+    this.selfcollider.y = this.y;
 
     this.Skillcollider.active = false;
 
@@ -147,22 +155,8 @@ class SpecialCharacter {
     // print('index is at', this.ani.index);
 
 
-
-
-    if (this.debug) {
-      // -22,  rect with length 22,10
-
-      rectMode(CENTER);
-      // door detect
-      // rect(this.x, this.y + 22, 22, 10);
-
-
-      if (mouseIsPressed) {
-        rectMode(CORNER);
-        // monster detecr
-        rect(this.x - 16, this.y - 20, this.width, this.height);
-      }
-    }
+    this.debugShow();
+    
 
 
     if(this.condition === 'atk'){
@@ -246,6 +240,8 @@ class SpecialCharacter {
 
       }
     }
+    
+
 
 
 
@@ -270,7 +266,7 @@ class SpecialCharacter {
       if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[1] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
         if (this.x === 28 && this.y < 154 && this.y > 138) {
           paning = 2;
-          freezetime = 64;
+          freezetime = 128;
         }
       }
 
@@ -335,6 +331,23 @@ class SpecialCharacter {
       this.ani.frame = 0;
     }
   }
+
+  debugShow(){
+    
+    if(mouseIsPressed)this.selfcollider.display();
+    if (this.debug){
+      // -22,  rect with length 22,10
+
+      // door detect
+      // rect(this.x, this.y + 22, 22, 10);
+
+      // monster detecr
+        
+      this.selfcollider.display();
+    }
+  }
+  
+  
 
 }
 
