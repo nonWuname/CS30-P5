@@ -11,7 +11,6 @@ let wallset = []; // 40 x 20
 let floorset = []; // 38 x 17
 
 
-let temp;
 
 
 
@@ -23,7 +22,6 @@ let temp;
 function loadAssets() {
 
   
-  temp = loadImage("assets/0.png")
 
 
 
@@ -58,6 +56,9 @@ function loadAssets() {
     OpenDoorset.push(loadImage("assets/Opendoor/" + i + '.png'))
   }
  
+
+  mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【本草綱目Chinese Herbal Manual】-Official Music Video.mp3'));
+  mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【霍元甲 Fearless】-Official Music Video.mp3'));
 
 
 }

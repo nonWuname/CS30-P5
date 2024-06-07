@@ -6,6 +6,7 @@
 // - describe what you did to take this project "above and beyond"
 
 
+let showmusic = false;
 
 
 let dungeon;
@@ -21,6 +22,8 @@ let freezetime = 0;
 
 let hero = new SpecialCharacter(100,100,20,20, new SpecialAni());
 
+let mymusic = new Music();
+
 
 function setup() {
   createCanvas(40*16 + 5 * 16,20 * 16);
@@ -31,6 +34,13 @@ function setup() {
    dungeon.setup();
    dungeon.mini_map();
 
+   for (let i = 0; i < mymusic.musicarr.length; ++i) {
+    mymusic.musicarr[i].onended((function(index) {
+        return function() {
+            mymusic.musicarr[index].shuffle();
+        };
+    })(i));
+}
 
 
 
@@ -39,6 +49,12 @@ function setup() {
 function draw() {
   clear();
   
+
+  if(showmusic){
+    mymusic.play();
+  }
+  
+
   dungeonDisplay();
 
 
@@ -88,10 +104,7 @@ function draw() {
   text('magic',41.5 * 16, 15.5 * 16);
 
 
-  if(mouseIsPressed){
-    imageMode(CENTER)
-    image(temp,hero.x,hero.y);
-  }
+ 
   
   // clear();
 
@@ -102,9 +115,9 @@ function draw() {
 
 function mousePressed() {
   
+  showmusic = true;
   
-  
-  image(temp,hero.x,hero.y);
+
   
   
   

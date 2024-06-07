@@ -19,7 +19,7 @@ class SpecialCharacter {
     this.ani = ani;
 
 
-    this.debug = false;
+    this.debug = true;
 
 
     this.skillActive = false;
@@ -284,9 +284,6 @@ class SpecialCharacter {
       this.ani.frame = 0;
     }
   }
-
-
-
 
 }
 
