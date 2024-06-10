@@ -35,7 +35,12 @@ let skeleton_shielder_ani = new SpecialAni();
 
 let monsterList = [];
 
-
+const EDGE = {
+  xstart:28,
+  xend: 612,
+  ystart: 12,
+  yend: 276
+}
 
 
 
@@ -54,7 +59,7 @@ function setup() {
  }
 
 
-  monsterList.push(new SpecialCharacter(32,32,10,10,skeleton_shielder_ani));
+  monsterList.push(new Enemy(32,32,10,10,skeleton_shielder_ani,'shielder'));
 
 
 
@@ -73,7 +78,7 @@ function draw() {
 
 
 
-  hero.display();
+  hero.all_in_one();
 
   if(mouseIsPressed && !dungeon.map[dungeon.index[0]][dungeon.index[1]].played){
     dungeon.map[dungeon.index[0]][dungeon.index[1]].played = true;
@@ -82,9 +87,13 @@ function draw() {
   hero.action();
   hero.skillAction();
 
-  monsterList[0].display(); 
 
-  print("hero is currently" , hero.condition)
+  for(let it of monsterList){
+    it.display();
+  }
+  
+
+
   
 
   // check for door
@@ -120,7 +129,7 @@ function mousePressed() {
   
 
   
-  
+  // monsterList.push(new Enemy(32,32,10,10,skeleton_shielder_ani,'shielder'));
   
   // dungeon.setup();
   // dungeon.mini_map(); 

@@ -321,7 +321,7 @@ function dungeonDisplay(){
         paning = 0 ;
         dungeonY = 0;
         dungeon.index[0] --;
-        hero.y = 276;
+        hero.y = EDGE.yend;
       }
     }
     else if(paningstate === 'left'){
@@ -336,7 +336,7 @@ function dungeonDisplay(){
         paningstate = 'null';
         paning = 0 ;
         dungeonX = 0;
-        hero.x = 612;
+        hero.x = EDGE.xend;
         dungeon.index[1]--;
   
       }
@@ -353,7 +353,7 @@ function dungeonDisplay(){
         paning = 0 ;
         dungeonY = 0;
         dungeon.index[0] ++;
-        hero.y = 12;
+        hero.y = EDGE.ystart;
       }
     }
     else if(paningstate === 'right'){
@@ -368,7 +368,7 @@ function dungeonDisplay(){
         paningstate = 'null';
         paning = 0 ;
         dungeonX = 0;
-        hero.x = 28;
+        hero.x = EDGE.xstart;
         dungeon.index[1]++;
   
       }

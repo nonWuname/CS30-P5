@@ -19,7 +19,7 @@ class SpecialCharacter {
     this.ani = ani;
 
 
-    this.debug = true;
+    this.debug = false;
 
 
     this.skillActive = false;
@@ -35,28 +35,43 @@ class SpecialCharacter {
     this.shootFreezeMax = 200;
     this.immuneFreeze = 0;
     this.immuneFreezeMax = 120;
+    this.deathFreeze = 0;
+    this.deathFreezeMax = 30;
 
     this.direction = "down";
     this.condition = "run";
 
-
-    this.Skillcollider = new Collider(0,0,0,0,'rect',0,'null','null',false);
-    this.selfcollider = new Collider(this.x,this.y,32,46,'rect',0,'null','null',true);
 
     this.atkwidth = 18;
     this.atkheight = 24;
     this.defwidth = 32;
     this.defheight = 14;
     this.width = 32;
-    this.height = 46;
+    this.height = 32;
 
+    this.Skillcollider = new Collider(0,0,0,0,'rect',0,'null','null',false);
+    this.selfcollider = new Collider(this.x,this.y,this.width,this.height,'rect',0,'null','null',true);
+
+    
+
+    this.framelimit = {
+      run: 5,
+      atk: 7,
+      def: 5,
+      shoot: 10,
+      magic:12,
+      death: 8,
+    }
   }
 
   setup() {
 
   }
 
- 
+  all_in_one(){
+    this.display();
+    this.ColliderShow();
+  }
 
   display() {
 
@@ -81,7 +96,7 @@ class SpecialCharacter {
 
     if (this.skilldemand === 'atk' && freezetime === 0) {
       this.condition = 'atk'
-      if (this.ani.frame % 7 === 0) {
+      if (this.ani.frame % this.framelimit.atk === 0) {
         this.ani.index++;
       }
 
@@ -95,7 +110,7 @@ class SpecialCharacter {
     }
     else if (this.skilldemand === 'def' && freezetime === 0) {
       this.condition = 'def'
-      if (this.ani.frame % 5 === 0) {
+      if (this.ani.frame % this.framelimit.def === 0) {
         this.ani.index++;
       }
 
@@ -109,7 +124,7 @@ class SpecialCharacter {
     }
     else if (this.skilldemand === 'magic' && freezetime === 0) {
       this.condition = 'magic'
-      if (this.ani.frame % 12 === 0) {
+      if (this.ani.frame % this.framelimit.magic === 0) {
         this.ani.index++;
       }
 
@@ -123,7 +138,7 @@ class SpecialCharacter {
     }
     else if (this.skilldemand === 'shoot' && freezetime === 0) {
       this.condition = 'shoot'
-      if (this.ani.frame % 10 === 0) {
+      if (this.ani.frame % this.framelimit.shoot === 0) {
         this.ani.index++;
       }
 
@@ -137,7 +152,7 @@ class SpecialCharacter {
     }
 
     if (this.condition === 'run') {
-      if (freezetime === 0 && frameCount % 4 === 0) this.ani.index++;
+      if (freezetime === 0 && frameCount % this.framelimit.run === 0) this.ani.index++;
       else if(freezetime > 0 && frameCount % 7 === 0)this.ani.index ++;
     }
 
@@ -159,41 +174,37 @@ class SpecialCharacter {
     
 
 
+  }
+
+  ColliderShow(){
     if(this.condition === 'atk'){
       rectMode(CENTER);
       fill(255);
       this.Skillcollider.active = true;
       
       if(this.direction === 'up'){
-        this.Skillcollider.x = this.x ;
-        this.Skillcollider.y = this.y + 3 - this.height/2 - this.atkheight/2;
-        this.Skillcollider.width = this.atkwidth;
-        this.Skillcollider.height = this.atkheight ;
+        this.SetCollider(this.x,this.y + 3 - this.height/2 - this.atkheight/2,
+        this.atkwidth,this.atkheight);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
       }
       else if(this.direction === 'left'){
-        this.Skillcollider.x = this.x - this.width/2 - this.atkheight/2;
-        this.Skillcollider.y = this.y + 10;
-        this.Skillcollider.width = this.atkheight;
-        this.Skillcollider.height = this.atkwidth;
+        this.SetCollider(this.x - this.width/2 - this.atkheight/2,this.y+10,
+        this.atkheight,this.atkwidth);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
       }
       if(this.direction === 'down'){
-        this.Skillcollider.x = this.x;
-        this.Skillcollider.y = this.y + 3 + this.height/2 + this.atkheight/2;
-        this.Skillcollider.width = this.atkwidth;
-        this.Skillcollider.height = this.atkheight;
+        this.SetCollider(this.x,this.y + 3 + this.height/2 + this.atkheight/2,
+        this.atkwidth,this.atkheight);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
 
       }
       else if(this.direction === 'right'){
-        this.Skillcollider.x = this.x + this.width/2 + this.atkheight/2;
-        this.Skillcollider.y = this.y + 10;
-        this.Skillcollider.width = this.atkheight;
-        this.Skillcollider.height = this.atkwidth;
+        this.SetCollider(this.x + this.width/2 + this.atkheight/2,this.y + 10
+        ,this.atkheight,this.atkwidth);
+        
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
 
@@ -205,46 +216,35 @@ class SpecialCharacter {
       fill(255);
       this.Skillcollider.active = true;
       if(this.direction === 'up'){
-        this.Skillcollider.x = this.x;
-        this.Skillcollider.y = this.y + 3 - this.height/2 - this.defheight/2;
-        this.Skillcollider.width = this.defwidth;
-        this.Skillcollider.height = this.defheight;
+        this.SetCollider(this.x,this.y + 3 - this.height/2 - this.defheight/2,
+        this.defwidth,this.defheight);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
       }
       else if(this.direction === 'left'){
-        this.Skillcollider.x = this.x - this.width/2 - this.defheight/2;
-        this.Skillcollider.y = this.y + 10;
-        this.Skillcollider.width = this.defheight;
-        this.Skillcollider.height = this.defwidth;
+        this.SetCollider(this.x - this.width/2 - this.defheight/2,this.y + 10,
+        this.defheight,this.defwidth);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
 
       }
       if(this.direction === 'down'){
-        this.Skillcollider.x = this.x;
-        this.Skillcollider.y = this.y + 3 + this.height/2 + this.defheight/2;
-        this.Skillcollider.width = this.defwidth;
-        this.Skillcollider.height = this.defheight;
+        this.SetCollider(this.x,this.y + 3 + this.height/2 + this.defheight/2,
+        this.defwidth, this.defheight);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
 
       }
       else if(this.direction === 'right'){
-        this.Skillcollider.x = this.x + this.width/2 + this.defheight/2;
-        this.Skillcollider.y = this.y + 10;
-        this.Skillcollider.width = this.defheight;
-        this.Skillcollider.height = this.defwidth;
+// 
+        this.SetCollider(this.x + this.width/2 + this.defheight/2, this.y+10,
+        this.defheight,this.defwidth);
         if(this.Skillcollider.CheckCollision(a))fill(255,0,0);
         this.Skillcollider.display();
 
       }
     }
     
-
-
-
-
   }
 
 
@@ -345,6 +345,13 @@ class SpecialCharacter {
         
       this.selfcollider.display();
     }
+  }
+
+  SetCollider(x,y,width,height){
+    this.Skillcollider.x = x;
+    this.Skillcollider.y = y;
+    this.Skillcollider.width = width;
+    this.Skillcollider.height = height;
   }
   
   

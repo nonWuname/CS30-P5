@@ -26,10 +26,8 @@ class Collider{
              {
                 return true;
              }
-
-
-
         }
+        return false;
 
     }
 
