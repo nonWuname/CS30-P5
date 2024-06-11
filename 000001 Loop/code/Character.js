@@ -95,7 +95,8 @@ class SpecialCharacter {
     }
 
     if (this.skilldemand === 'atk' && freezetime === 0) {
-      this.condition = 'atk'
+      this.condition = 'atk';
+      this.Skillcollider.active = true;
       if (this.ani.frame % this.framelimit.atk === 0) {
         this.ani.index++;
       }
@@ -106,10 +107,12 @@ class SpecialCharacter {
         this.skilldemand = 'null';
         this.atkFreeze = this.atkFreezeMax;
         this.skillActive = false;
+        // print(this.skillActive,this.skilldemand)
       }
     }
     else if (this.skilldemand === 'def' && freezetime === 0) {
-      this.condition = 'def'
+      this.condition = 'def';
+      this.Skillcollider.active = true;
       if (this.ani.frame % this.framelimit.def === 0) {
         this.ani.index++;
       }
@@ -180,8 +183,7 @@ class SpecialCharacter {
     if(this.condition === 'atk'){
       rectMode(CENTER);
       fill(255);
-      this.Skillcollider.active = true;
-      
+
       if(this.direction === 'up'){
         this.SetCollider(this.x,this.y + 3 - this.height/2 - this.atkheight/2,
         this.atkwidth,this.atkheight);
@@ -214,7 +216,6 @@ class SpecialCharacter {
     else if(this.condition === 'def'){
       rectMode(CENTER);
       fill(255);
-      this.Skillcollider.active = true;
       if(this.direction === 'up'){
         this.SetCollider(this.x,this.y + 3 - this.height/2 - this.defheight/2,
         this.defwidth,this.defheight);
@@ -251,7 +252,7 @@ class SpecialCharacter {
   action() {
     if (keyIsDown(87) && freezetime === 0) {
       if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[0] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
-        if (this.y === 12 && this.x < 330 && this.x > 308) {
+        if (this.y >= EDGE.ystart - 3 && this.y <= EDGE.ystart + 3 && this.x < 330 && this.x > 308) {
           paning = 1;
           freezetime = 64;
         }
@@ -264,9 +265,9 @@ class SpecialCharacter {
 
     else if (keyIsDown(65) && freezetime === 0) {
       if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[1] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
-        if (this.x === 28 && this.y < 154 && this.y > 138) {
+        if (this.x >= EDGE.xstart - 3 && this.x <= EDGE.xstart + 3 && this.y < 154 && this.y > 138) {
           paning = 2;
-          freezetime = 128;
+          freezetime = 64;
         }
       }
 
@@ -277,7 +278,7 @@ class SpecialCharacter {
 
     else if (keyIsDown(83) && freezetime === 0) {
       if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[2] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
-        if (this.y === 276 && this.x < 330 && this.x > 308) {
+        if (this.y <= EDGE.yend + 3 && this.y >= EDGE.yend - 3 && this.x < 330 && this.x > 308) {
           paning = 3;
           freezetime = 64;
         }
@@ -290,7 +291,7 @@ class SpecialCharacter {
     else if (keyIsDown(68) && freezetime === 0) {
 
       if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[3] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
-        if (this.x === 612 && this.y < 154 && this.y > 138) {
+        if (this.x <=EDGE.xend + 3 && this.x >= EDGE.xend - 3 && this.y < 154 && this.y > 138) {
           paning = 4;
           freezetime = 64;
         }
@@ -354,7 +355,12 @@ class SpecialCharacter {
     this.Skillcollider.height = height;
   }
   
-  
+  CheckEdge(){
+    if(this.x > EDGE.xend)this.x = EDGE.xend;
+    if(this.x < EDGE.xstart)this.x = EDGE.xstart;
+    if(this.y < EDGE.ystart)this.y = EDGE.ystart;
+    if(this.y > EDGE.yend) this.y = EDGE.yend;
+}
 
 }
 

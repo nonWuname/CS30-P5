@@ -195,8 +195,8 @@ class Dungeon {
             this.bossCell.push(temp);
             this.map[temp[0]][temp[1]].type = `boss`;
         }
-        print(this.cell.length)
-        print('oneway is',this.oneWay, '\ncell is',this.cell)
+        // print(this.cell.length)
+        // print('oneway is',this.oneWay, '\ncell is',this.cell)
     }
 
 
@@ -327,8 +327,8 @@ function dungeonDisplay(){
     else if(paningstate === 'left'){
       dungeon.display( -40 * 16 + dungeonX,dungeonY,-1,0,3);// next
       dungeon.display(dungeonX,dungeonY,0,0,-1); // original display(x,y,shiftX, shiftY,drawdoor)
-      dungeonX += 5;
-      hero.x += 4;
+      dungeonX += 10;
+      hero.x += 9;
       hero.condition = 'run';
       freezetime --;
   

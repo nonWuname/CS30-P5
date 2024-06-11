@@ -23,9 +23,8 @@ class Collider{
                 && this.y - this.height/2 < Othercollider.y + Othercollider.height / 2
                 
              )
-             {
                 return true;
-             }
+             
         }
         return false;
 
@@ -37,7 +36,7 @@ class Collider{
             rect(this.x,this.y,this.width,this.height);
         }
     }
-
+    
 
     
 }

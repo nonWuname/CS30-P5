@@ -133,13 +133,14 @@ function mousePressed() {
   
   // dungeon.setup();
   // dungeon.mini_map(); 
-
+  
 }
 
 
 
 function keyPressed(){
- 
+  if(keyIsDown(DOWN_ARROW)){monsterList[0].speed = 0}
+  else if(keyIsDown(UP_ARROW)){monsterList[0].speed = 1}
 }
 
 
