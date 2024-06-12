@@ -84,12 +84,19 @@ function draw() {
     dungeon.map[dungeon.index[0]][dungeon.index[1]].played = true;
   }
 
-  hero.action();
-  hero.skillAction();
+  if(hero.hp > 0){
+    hero.action();
+    hero.skillAction();
+  }
 
 
-  for(let it of monsterList){
-    it.display();
+
+  for(let i = 0; i < monsterList.length; ++i){
+    monsterList[i].display();
+    if(monsterList[i].condition === 'null'){
+      monsterList.splice(i,1);
+      i--;
+    }
   }
   
 
@@ -129,7 +136,7 @@ function mousePressed() {
   
 
   
-  // monsterList.push(new Enemy(32,32,10,10,skeleton_shielder_ani,'shielder'));
+  monsterList.push(new Enemy(32,32,10,10,skeleton_shielder_ani,'shielder'));
   
   // dungeon.setup();
   // dungeon.mini_map(); 
@@ -139,7 +146,10 @@ function mousePressed() {
 
 
 function keyPressed(){
-  if(keyIsDown(DOWN_ARROW)){monsterList[0].speed = 0}
+  if(keyIsDown(DOWN_ARROW)){
+    monsterList[0].speed = 0
+    hero.hp = 0;
+  }
   else if(keyIsDown(UP_ARROW)){monsterList[0].speed = 1}
 }
 

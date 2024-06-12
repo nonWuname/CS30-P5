@@ -44,6 +44,13 @@ class SpecialAni {
       }
   
     }
+
+  deathLoad(condition, direction, location, size){
+    const animation = this.aniarr[condition];
+    for(let i = 0; i < size; ++i){
+      animation.push(loadImage(location + `${direction}` + '_' + `${condition}` + '_' + i + '.png'));
+    }
+  } 
   
 
 

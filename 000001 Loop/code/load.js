@@ -42,6 +42,9 @@ function loadAssets() {
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
     hero.ani.loadAni('shoot', ANIDIRECTION[i] , 'assets/main Character/shoot/' + ANIDIRECTION[i]  + '/' , 5);
   }
+  for(let i = 0; i < 5; ++i){
+    hero.ani.aniarr['die'].push(loadImage('assets/main Character/die/' + i + '.png'));
+  }
 
   // skeleton shielder
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
@@ -49,6 +52,9 @@ function loadAssets() {
   }
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
     skeleton_shielder_ani.SavetimeLoad('atk', ANIDIRECTION[i] , 'assets/Skeleton/Shielder/tuci/' , 7, 'tuci');
+  }
+  for(let i = 0; i < 1; ++i){
+    skeleton_shielder_ani.deathLoad('die', 'down','assets/Skeleton/Shielder/die/' , 5 );
   }
   
   
