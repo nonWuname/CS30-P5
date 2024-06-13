@@ -1,12 +1,3 @@
-class Character {
-
-  constructor() {
-
-  }
-
-}
-
-
 
 
 class SpecialCharacter {
@@ -23,6 +14,7 @@ class SpecialCharacter {
 
 
     this.skillActive = false;
+    this.deathActive = false;
     this.skilldemand = 'null';
 
     this.atkFreeze = 0;
@@ -35,8 +27,7 @@ class SpecialCharacter {
     this.shootFreezeMax = 200;
     this.immuneFreeze = 0;
     this.immuneFreezeMax = 120;
-    this.deathFreeze = 0;
-    this.deathFreezeMax = 30;
+
 
     this.direction = "down";
     this.condition = "run";
@@ -52,7 +43,7 @@ class SpecialCharacter {
     this.Skillcollider = new Collider(0, 0, 0, 0, 'rect', 0, 'null', 'null', false);
     this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
 
-
+    this.type = 'hero';
 
     this.framelimit = {
       run: 5,
@@ -62,6 +53,9 @@ class SpecialCharacter {
       magic: 12,
       die: 20,
     }
+
+
+
   }
 
   setup() {
@@ -78,9 +72,11 @@ class SpecialCharacter {
     this.selfcollider.x = this.x;
     this.selfcollider.y = this.y;
 
+    if (this.hp < 0) this.hp = 0;
+
     this.Skillcollider.active = false;
 
-    if (this.hp <= 0 && this.hp !== -0x3f3f3f) {
+    if (this.hp <= 0 && this.condition !== 'null') {
       this.selfcollider.active = false;
       this.condition = 'die';
     }
@@ -158,31 +154,38 @@ class SpecialCharacter {
         this.skillActive = false;
       }
     }
-    else if(this.condition === 'die'){
-      this.condition = 'die';
-      
-      if(!this.skillActive){
+
+    if (this.condition === 'die') {
+
+      if (!this.deathActive) {
         this.ani.index = 0;
         this.ani.frame = 0;
       }
-      
-
-      this.skillActive = true;
 
 
-      if (this.ani.frame % this.framelimit.die === 0) {
-        this.ani.index++;
-        print(this.ani.index);
+
+      this.deathActive = true;
+
+      if (this.ani.index <= this.ani.aniarr[this.condition].length - 3) {
+        if (this.ani.frame % this.framelimit.die === 0) {
+          this.ani.index++;
+        }
+
+      }
+      else if (this.ani.index >= this.ani.aniarr[this.condition].length - 2 && this.ani.index <= this.ani.aniarr[this.condition].length - 1) {
+        if (this.ani.frame % (this.framelimit.die * 6) === 0) {
+          this.ani.index++;
+
+        }
       }
 
       this.ani.frame++;
-      
+
 
 
       if (this.ani.index === this.ani.aniarr[this.condition].length) {
         // show the block;
         this.condition = 'null';
-        this.hp = -0x3f3f3f;
       }
 
     }
@@ -193,9 +196,9 @@ class SpecialCharacter {
     }
 
     let animation = null;
-    
-    if(this.condition !== 'die' && this.condition !== 'null')animation = this.ani.aniarr[this.condition][this.direction];
-    else if(this.condition === 'die') animation = this.ani.aniarr[this.condition];
+
+    if (this.condition !== 'die' && this.condition !== 'null') animation = this.ani.aniarr[this.condition][this.direction];
+    else if (this.condition === 'die') animation = this.ani.aniarr[this.condition];
 
 
 
@@ -214,8 +217,6 @@ class SpecialCharacter {
 
 
 
-
-
   }
 
   ColliderShow() {
@@ -226,30 +227,23 @@ class SpecialCharacter {
       if (this.direction === 'up') {
         this.SetCollider(this.x, this.y + 3 - this.height / 2 - this.atkheight / 2,
           this.atkwidth, this.atkheight);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+        if (this.debug) this.Skillcollider.display();
       }
       else if (this.direction === 'left') {
         this.SetCollider(this.x - this.width / 2 - this.atkheight / 2, this.y + 10,
           this.atkheight, this.atkwidth);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+        if (this.debug) this.Skillcollider.display();
       }
       if (this.direction === 'down') {
         this.SetCollider(this.x, this.y + 3 + this.height / 2 + this.atkheight / 2,
           this.atkwidth, this.atkheight);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+        if (this.debug) this.Skillcollider.display();
 
       }
       else if (this.direction === 'right') {
         this.SetCollider(this.x + this.width / 2 + this.atkheight / 2, this.y + 10
           , this.atkheight, this.atkwidth);
-
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
-
-
+        if (this.debug) this.Skillcollider.display();
       }
     }
     else if (this.condition === 'def') {
@@ -258,29 +252,27 @@ class SpecialCharacter {
       if (this.direction === 'up') {
         this.SetCollider(this.x, this.y + 3 - this.height / 2 - this.defheight / 2,
           this.defwidth, this.defheight);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+        if (this.debug) this.Skillcollider.display();
       }
       else if (this.direction === 'left') {
         this.SetCollider(this.x - this.width / 2 - this.defheight / 2, this.y + 10,
           this.defheight, this.defwidth);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+        if (this.debug) this.Skillcollider.display();
 
       }
       if (this.direction === 'down') {
         this.SetCollider(this.x, this.y + 3 + this.height / 2 + this.defheight / 2,
           this.defwidth, this.defheight);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+
+        if (this.debug) this.Skillcollider.display();
 
       }
       else if (this.direction === 'right') {
         // 
         this.SetCollider(this.x + this.width / 2 + this.defheight / 2, this.y + 10,
           this.defheight, this.defwidth);
-        if (this.Skillcollider.CheckCollision(a)) fill(255, 0, 0);
-        this.Skillcollider.display();
+
+        if (this.debug) this.Skillcollider.display();
 
       }
     }
@@ -341,7 +333,7 @@ class SpecialCharacter {
       this.direction = 'right';
       this.condition = 'run';
     }
-    else if(this.hp <= 0) this.condition = 'die';
+    else if (this.hp <= 0) this.condition = 'die';
     else this.condition = 'idle';
   }
 
@@ -388,11 +380,13 @@ class SpecialCharacter {
     }
   }
 
-  SetCollider(x, y, width, height) {
+  SetCollider(x, y, width, height, damage, damageDirection) {
     this.Skillcollider.x = x;
     this.Skillcollider.y = y;
     this.Skillcollider.width = width;
     this.Skillcollider.height = height;
+    this.Skillcollider.damage = damage;
+    this.Skillcollider.damageDirection = damageDirection;
   }
 
   CheckEdge() {
@@ -401,6 +395,26 @@ class SpecialCharacter {
     if (this.y < EDGE.ystart) this.y = EDGE.ystart;
     if (this.y > EDGE.yend) this.y = EDGE.yend;
   }
+
+
+
+
+  hp_bar() {
+
+    rectMode(CORNER);
+    fill(255, 0, 0);
+    rect(0, 0, 200, 12);
+    fill(0, 255, 0);
+    rect(0, 0, map(this.hp, 0, this.hpMax, 0, 200), 12);
+
+
+
+
+  }
+
+
+
+
 
 }
 

@@ -28,8 +28,6 @@ let mymusic = new Music();
 
 
 
-let a = new Collider(20*16,10*16,20,20,'rect',0,'null','null',true)//constructor(x,y,width,height,Shapemode,damage,damageType,damageDirection){
-
 
 let skeleton_shielder_ani = new SpecialAni();
 
@@ -91,8 +89,11 @@ function draw() {
 
 
 
+
+
+
   for(let i = 0; i < monsterList.length; ++i){
-    monsterList[i].display();
+    monsterList[i].Enemy_action();
     if(monsterList[i].condition === 'null'){
       monsterList.splice(i,1);
       i--;
@@ -111,20 +112,19 @@ function draw() {
 
 
   uiBar();
+  hero.hp_bar();
 
 
-  rectMode(CENTER); 
-  fill(255)
-  if(a.CheckCollision(hero.Skillcollider))fill(255,0,0);
-  a.display();
 
   
   // clear();
 
   // image(temp.get(0,0,48,32),mouseX,mouseY);
 
-  image(skeleton_shielder_ani.aniarr['run']['right'][skeleton_shielder_ani.index % 7],mouseX,mouseY);
-  if(frameCount % 7 === 0)skeleton_shielder_ani.index ++;
+
+  //highlight here, one bug
+  // image(skeleton_shielder_ani.aniarr['run']['right'][skeleton_shielder_ani.index % 7],mouseX,mouseY);
+  // if(frameCount % 7 === 0)skeleton_shielder_ani.index ++;
 
 }
 
@@ -151,6 +151,7 @@ function keyPressed(){
     hero.hp = 0;
   }
   else if(keyIsDown(UP_ARROW)){monsterList[0].speed = 1}
+  else if(keyIsDown(LEFT_ARROW)){hero.debug = true;}
 }
 
 
