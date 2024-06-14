@@ -17,9 +17,9 @@ class Collider{
 
 
 
-            if( this.x - this.width / 2 <  Othercollider.x + Othercollider.width /2 
-                && this.x + this.width / 2 >  Othercollider.x - Othercollider.width /2
-                && this.y  + this.height / 2 > Othercollider.y - Othercollider.height /2
+            if( this.x - this.width / 2 <  Othercollider.x + Othercollider.width / 2 
+                && this.x + this.width / 2 >  Othercollider.x - Othercollider.width / 2
+                && this.y  + this.height / 2 > Othercollider.y - Othercollider.height / 2
                 && this.y - this.height/2 < Othercollider.y + Othercollider.height / 2
                 
              )

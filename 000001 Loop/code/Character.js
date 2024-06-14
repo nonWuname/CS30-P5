@@ -18,25 +18,27 @@ class SpecialCharacter {
     this.skilldemand = 'null';
 
     this.atkFreeze = 0;
-    this.atkFreezeMax = 40;
+    this.atkFreezeMax = 18;
     this.defFreeze = 0;
-    this.defFreezeMax = 10;
+    this.defFreezeMax = 36;
     this.magicFreeze = 0;
     this.magicFreezeMax = 300;
     this.shootFreeze = 0;
     this.shootFreezeMax = 200;
     this.immuneFreeze = 0;
     this.immuneFreezeMax = 120;
+    this.dashFreeze = 0;
+    this.dashFreezeMax = 120;
 
 
     this.direction = "down";
     this.condition = "run";
 
 
-    this.atkwidth = 18;
+    this.atkwidth = 20;
     this.atkheight = 24;
     this.defwidth = 32;
-    this.defheight = 14;
+    this.defheight = 16;
     this.width = 32;
     this.height = 32;
 
@@ -65,6 +67,8 @@ class SpecialCharacter {
   all_in_one() {
     this.display();
     this.ColliderShow();
+
+
   }
 
   display() {
@@ -92,6 +96,7 @@ class SpecialCharacter {
       fill(192, 192, 192);
       circle(this.x,this.y,64);
     } 
+    if(this.dashFreeze > 0) this.dashFreeze --;
 
     if (freezetime > 0) {
       this.atkFreeze = 0;
@@ -100,6 +105,7 @@ class SpecialCharacter {
       this.shootFreeze = 0;
       this.skilldemand = 'null';
       this.skillActive = false;
+      this.dashFreeze = 0;
     }
 
     if (this.skilldemand === 'atk' && freezetime === 0 && this.hp > 0) {
@@ -221,6 +227,8 @@ class SpecialCharacter {
 
     this.debugShow();
 
+
+    
 
 
 
@@ -370,6 +378,44 @@ class SpecialCharacter {
       this.ani.index = 0;
       this.ani.frame = 0;
     }
+
+    if( keyIsDown(16) && freezetime === 0 && this.dashFreeze === 0){
+      if(this.direction === 'right') this.x += 128;
+      else if(this.direction === 'left') this.x -=128;
+      else if(this.direction === 'up')this.y -=128;
+      else this.y +=128;
+      this.dashFreeze = this.dashFreezeMax;
+      
+      if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[0] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
+        if ((this.y >= EDGE.ystart - 3 && this.y <= EDGE.ystart + 3) || this.y < EDGE.ystart && this.x < 330 && this.x > 308) {
+          paning = 1;
+          freezetime = 64;
+        }
+      }
+      if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[1] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
+        if ((this.x >= EDGE.xstart - 3 && this.x <= EDGE.xstart + 3) || this.x < EDGE.xstart && this.y < 154 && this.y > 138) {
+          paning = 2;
+          freezetime = 64;
+        }
+      }
+      if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[2] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
+        if ((this.y <= EDGE.yend + 3 && this.y >= EDGE.yend - 3) || this.y > EDGE.yend && this.x < 330 && this.x > 308) {
+          paning = 3;
+          freezetime = 64;
+        }
+      }
+      
+      if (dungeon.map[dungeon.index[0]][dungeon.index[1]].noWall[3] && dungeon.map[dungeon.index[0]][dungeon.index[1]].played) {
+        if ((this.x <= EDGE.xend + 3 && this.x >= EDGE.xend - 3) || this.x > EDGE.xend && this.y < 154 && this.y > 138) {
+          paning = 4;
+          freezetime = 64;
+        }
+      }
+
+
+      this.CheckEdge();
+    }
+
   }
 
   debugShow() {
@@ -419,6 +465,9 @@ class SpecialCharacter {
 
 
 }
+
+
+
 
 
 

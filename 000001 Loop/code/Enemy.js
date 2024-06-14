@@ -49,6 +49,8 @@ class Enemy extends SpecialCharacter {
         this.atkAction();
 
 
+
+
     }
 
     update() {
@@ -70,7 +72,7 @@ class Enemy extends SpecialCharacter {
     }
 
     atkAction() {
-        if (this.type !== 'archer') {
+        if (this.type !== 'archer' && this.type !== 'boss') {
             if (Math.abs(this.x - hero.x) < this.width + this.atkwidth + 5 &&
                 Math.abs(this.y - hero.y) < this.height + this.atkheight + 5
             ) {
@@ -95,6 +97,10 @@ class Enemy extends SpecialCharacter {
                 this.immuneFreeze = 20;
                 this.CheckEdge();
 
+            }
+
+            if(hero.Skillcollider.CheckCollision(this.Skillcollider) && hero.skilldemand === 'def'){
+                hero.immuneFreeze += 30;
             }
             // print(this.x,this.y)
         }

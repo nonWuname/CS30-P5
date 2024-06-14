@@ -25,6 +25,8 @@ let hero = new SpecialCharacter(100,100,20,20, new SpecialAni());
 let mymusic = new Music();
 
 
+let Is_dash_touch = false;
+let dash_hero = new Collider(hero.x, hero.y, 15, 15, 'rect', 0, 'null', 'null', true);
 
 
 
@@ -85,11 +87,14 @@ function draw() {
   if(hero.hp > 0){
     hero.action();
     hero.skillAction();
+    check_dash();
   }
 
 
 
 
+
+  
 
 
   for(let i = 0; i < monsterList.length; ++i){
@@ -181,9 +186,49 @@ function uiBar(){
   rect(40*16,14*16, 5 * 16 - map(hero.magicFreeze,0,hero.magicFreezeMax,0,5*16),3*16);
   fill(255);
   text('magic',41.5 * 16, 15.5 * 16);
+
+
+  fill(135, 206, 235);
+  rect(40*16,17*16, 5 * 16 - map(hero.dashFreeze,0,hero.dashFreezeMax,0,5*16),3*16);
+  fill(255);
+  text('dash',41.5 * 16, 18.5 * 16);
 }
 
 
+
+
+function check_dash(){
+  Is_dash_touch = false;
+  for(let i = 0; i < monsterList.length; ++i){
+    if(dash_hero.CheckCollision(monsterList[i].selfcollider)){
+      Is_dash_touch = true;
+      break;
+    }
+  }
+
+  dash_hero.x = hero.x;
+  dash_hero.y = hero.y;
+
+  if(hero.direction === 'right'){
+    dash_hero.x += 128;
+  }
+  else if(hero.direction === 'left'){
+    dash_hero.x -=128;
+  }
+  else if(hero.direction === 'up'){
+    dash_hero.y -= 128;
+  }
+  else{
+    dash_hero.y += 128;
+  }
+
+  fill(0,255,0);
+  if(Is_dash_touch){
+    fill(255,0,0);
+  }
+  
+  dash_hero.display();
+}
 
 
  //old
