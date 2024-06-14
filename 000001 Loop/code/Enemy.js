@@ -1,3 +1,14 @@
+function shallowClone(obj) {
+    let clonedObj = {};
+    for (let key in obj) {
+        if (obj.hasOwnProperty(key)) {
+            clonedObj[key] = obj[key];
+        }
+    }
+    return clonedObj;
+}
+
+
 class Enemy extends SpecialCharacter {
     constructor(x, y, atk, hp, ani, type) {
 
@@ -18,11 +29,15 @@ class Enemy extends SpecialCharacter {
             this.lastmethod = 0;
             this.currmethod = 0;
 
+            this.force = 1;
+            this.defForce = 1;
+
             this.changeMethod = int(random(30, 150));
+            this.ani = shallowClone(skeleton_shielder_ani);
         }
         this.debug = false;
 
-        this.atkFreezeMax = 10;
+        this.atkFreezeMax = 30;
 
     }
     Enemy_action() {
@@ -55,11 +70,11 @@ class Enemy extends SpecialCharacter {
     }
 
     atkAction() {
-        if (this.type === 'shielder') {
+        if (this.type !== 'archer') {
             if (Math.abs(this.x - hero.x) < this.width + this.atkwidth + 5 &&
                 Math.abs(this.y - hero.y) < this.height + this.atkheight + 5
             ) {
-                if (this.skillActive === false && this.atkFreeze === 0 && hero.hp > 0 && this.hp > 0) {
+                if (this.skillActive === false && this.atkFreeze === 0 && hero.hp > 0 && this.hp > 0 && hero.immuneFreeze === 0) {
                     this.skillActive = true;
                     this.skilldemand = 'atk';
                     this.ani.index = 0;
@@ -68,33 +83,32 @@ class Enemy extends SpecialCharacter {
             }
 
 
-            if (this.Skillcollider.CheckCollision(hero.selfcollider)) {
+            if (this.Skillcollider.CheckCollision(hero.selfcollider) && hero.immuneFreeze === 0) {
                 this.applyForce('hero');
-                this.textTimer = this.textTime;
-                hero.hp -= 12;
+                hero.hp -= this.atk;
+                hero.immuneFreeze = 60;
                 hero.CheckEdge();
             }
-            else if (hero.Skillcollider.CheckCollision(this.selfcollider)) {
+            else if (hero.Skillcollider.CheckCollision(this.selfcollider) && this.immuneFreeze === 0) {
                 this.applyForce('self');
-                this.hp -= 20;
+                this.Shield_reduce_damage(hero.Skillcollider.damageDirection);
+                this.immuneFreeze = 20;
                 this.CheckEdge();
 
             }
             // print(this.x,this.y)
         }
 
-
-        if(this.textTimer > 0)text(12,this.x + 48,this.y + 48);
     }
 
     applyForce(to_Who) {
         if (to_Who === 'self') {
-            this.x = this.x + (this.x - hero.x);
-            this.y = this.y + (this.y - hero.y);
+            this.x = this.x + (this.x - hero.x) * this.defForce;
+            this.y = this.y + (this.y - hero.y) * this.defForce;
         }
         else {
-            hero.x = hero.x + (hero.x - this.x);
-            hero.y = hero.y + (hero.y - this.y);
+            hero.x = hero.x + (hero.x - this.x) * this.force;
+            hero.y = hero.y + (hero.y - this.y) * this.force;
         }
     }
     CheckEdge() {
@@ -197,7 +211,25 @@ class Enemy extends SpecialCharacter {
 
 
 
-
+    Shield_reduce_damage(direction , coefficient){
+        if(this.type === 'shielder') coefficient = 0.75
+        
+        if(this.direction === direction){
+            this.hp = this.hp - (hero.Skillcollider.damage * (1 + coefficient))
+            print('increditble')
+        }
+        else if((direction === 'right' && this.direction === 'left')
+        || (direction === 'left' && this.direction === 'right')
+        || (direction === 'up' && this.direction === 'down')
+        ||(direction === 'down' && this.direction === 'up')
+        ){
+            this.hp = this.hp - (hero.Skillcollider.damage * (1-coefficient))
+        }
+        else {
+            this.hp-= hero.Skillcollider.damage;
+            print('nice')
+        }
+    }
 
 
 

@@ -57,7 +57,7 @@ function setup() {
  }
 
 
-  monsterList.push(new Enemy(32,32,10,10,skeleton_shielder_ani,'shielder'));
+  monsterList.push(new Enemy(32,32,null,null,null,'shielder'));
 
 
 
@@ -136,7 +136,7 @@ function mousePressed() {
   
 
   
-  monsterList.push(new Enemy(32,32,10,10,skeleton_shielder_ani,'shielder'));
+  monsterList.push(new Enemy(32,32,null,null,null,'shielder'));
   
   // dungeon.setup();
   // dungeon.mini_map(); 

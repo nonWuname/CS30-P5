@@ -79,12 +79,19 @@ class SpecialCharacter {
     if (this.hp <= 0 && this.condition !== 'null') {
       this.selfcollider.active = false;
       this.condition = 'die';
+      this.immuneFreeze = 0;
     }
 
     if (this.atkFreeze > 0) this.atkFreeze--;
     if (this.defFreeze > 0) this.defFreeze--;
     if (this.magicFreeze > 0) this.magicFreeze--;
     if (this.shootFreeze > 0) this.shootFreeze--;
+    if(this.immuneFreeze > 0){
+
+      this.immuneFreeze --;
+      fill(192, 192, 192);
+      circle(this.x,this.y,64);
+    } 
 
     if (freezetime > 0) {
       this.atkFreeze = 0;
@@ -226,23 +233,23 @@ class SpecialCharacter {
 
       if (this.direction === 'up') {
         this.SetCollider(this.x, this.y + 3 - this.height / 2 - this.atkheight / 2,
-          this.atkwidth, this.atkheight);
+          this.atkwidth, this.atkheight, this.atk * 1.2, this.direction);
         if (this.debug) this.Skillcollider.display();
       }
       else if (this.direction === 'left') {
         this.SetCollider(this.x - this.width / 2 - this.atkheight / 2, this.y + 10,
-          this.atkheight, this.atkwidth);
+          this.atkheight, this.atkwidth, this.atk * 1.2, this.direction);
         if (this.debug) this.Skillcollider.display();
       }
       if (this.direction === 'down') {
         this.SetCollider(this.x, this.y + 3 + this.height / 2 + this.atkheight / 2,
-          this.atkwidth, this.atkheight);
+          this.atkwidth, this.atkheight, this.atk * 1.2, this.direction);
         if (this.debug) this.Skillcollider.display();
 
       }
       else if (this.direction === 'right') {
         this.SetCollider(this.x + this.width / 2 + this.atkheight / 2, this.y + 10
-          , this.atkheight, this.atkwidth);
+          , this.atkheight, this.atkwidth, this.atk * 1.2, this.direction);
         if (this.debug) this.Skillcollider.display();
       }
     }
@@ -251,18 +258,18 @@ class SpecialCharacter {
       fill(255);
       if (this.direction === 'up') {
         this.SetCollider(this.x, this.y + 3 - this.height / 2 - this.defheight / 2,
-          this.defwidth, this.defheight);
+          this.defwidth, this.defheight, this.atk * 0.3, this.direction);
         if (this.debug) this.Skillcollider.display();
       }
       else if (this.direction === 'left') {
         this.SetCollider(this.x - this.width / 2 - this.defheight / 2, this.y + 10,
-          this.defheight, this.defwidth);
+          this.defheight, this.defwidth, this.atk * 0.3, this.direction);
         if (this.debug) this.Skillcollider.display();
 
       }
       if (this.direction === 'down') {
         this.SetCollider(this.x, this.y + 3 + this.height / 2 + this.defheight / 2,
-          this.defwidth, this.defheight);
+          this.defwidth, this.defheight, this.atk * 0.3, this.direction);
 
         if (this.debug) this.Skillcollider.display();
 
@@ -270,7 +277,7 @@ class SpecialCharacter {
       else if (this.direction === 'right') {
         // 
         this.SetCollider(this.x + this.width / 2 + this.defheight / 2, this.y + 10,
-          this.defheight, this.defwidth);
+          this.defheight, this.defwidth, this.atk * 0.3, this.direction);
 
         if (this.debug) this.Skillcollider.display();
 
@@ -400,16 +407,11 @@ class SpecialCharacter {
 
 
   hp_bar() {
-
     rectMode(CORNER);
     fill(255, 0, 0);
     rect(0, 0, 200, 12);
     fill(0, 255, 0);
     rect(0, 0, map(this.hp, 0, this.hpMax, 0, 200), 12);
-
-
-
-
   }
 
 
