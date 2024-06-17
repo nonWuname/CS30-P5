@@ -1,23 +1,17 @@
-class Music{
-    constructor(){
-        this.musicarr = [];
-        this.index = 0;
-    }
+let musicList = [];
+let musicIndex = 0;
 
-    play(){ 
-       if(!this.musicarr[this.index].isPlaying()) this.musicarr[this.index].play();
+function music_shuffle() {
+    if (musicList[musicIndex].isPlaying()) musicList[musicIndex].stop();
+    musicIndex += int(random(1, musicList.length));
+    musicIndex %= musicList.length;
+}
 
-    }
-
-    shuffle(index){
-        if (this.musicarr[index].isPlaying()) {
-            this.musicarr[index].stop(); 
-        }
-        
-        index ++;
-        index =  index %  this.musicarr.length;
-        this.musicarr[index].play();
-    }
-
+function check_and_play_music() {
+    if(!musicList[musicIndex].isPlaying()){
+        musicList[musicIndex].play();
+        musicList[musicIndex].setVolume(0.3);
+    } 
+    
 
 }

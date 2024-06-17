@@ -229,8 +229,10 @@ class Room {
         this.visited = false;
         this.neighborNum = 0;
         this.step = -1;
-        this.type;
+        this.type = null;
         this.played = false;
+
+        this.has_generate = false;
     }
 
     init() {
@@ -322,6 +324,9 @@ function dungeonDisplay(){
         dungeonY = 0;
         dungeon.index[0] --;
         hero.y = EDGE.yend;
+        Monsternum = int(random(8,17));
+        generateFreeze = 60;
+        hero.immuneFreeze += 120;;
       }
     }
     else if(paningstate === 'left'){
@@ -338,7 +343,9 @@ function dungeonDisplay(){
         dungeonX = 0;
         hero.x = EDGE.xend;
         dungeon.index[1]--;
-  
+        Monsternum = int(random(8,17));
+        generateFreeze = 60;
+        hero.immuneFreeze += 120;
       }
     }
     else if(paningstate === 'down'){
@@ -354,6 +361,9 @@ function dungeonDisplay(){
         dungeonY = 0;
         dungeon.index[0] ++;
         hero.y = EDGE.ystart;
+        Monsternum = int(random(8,17));
+        generateFreeze = 60;
+        hero.immuneFreeze += 120;
       }
     }
     else if(paningstate === 'right'){
@@ -370,6 +380,9 @@ function dungeonDisplay(){
         dungeonX = 0;
         hero.x = EDGE.xstart;
         dungeon.index[1]++;
+        Monsternum = int(random(8,17));
+        generateFreeze = 60;
+        hero.immuneFreeze += 120;
   
       }
     }
