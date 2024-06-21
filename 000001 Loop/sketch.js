@@ -1,10 +1,12 @@
-// Project Title
-// Your Name
+// Loop Hero
+// Luke Wu
 // Date
 //
-// Extra for Experts:
-// - describe what you did to take this project "above and beyond"
+// Repeat loop game, fight for fun, just fight
 
+// the meaning of code are as same as the name is short for ASAN;
+
+// ASAN
 const taunts = [
   "Your gaming skills are on par with a sleep-deprived sloth.",
   "I've seen bots play more skillfully than you.",
@@ -44,9 +46,10 @@ let paningstate = 'null';
 
 
 
-
+// ASAN
 let freezetime = 0;
 
+let hero;
 let hero_ani = new SpecialAni();
 
 
@@ -56,9 +59,10 @@ let Is_dash_touch = false;
 let dash_hero;
 
 
-
+// this is to test should the program show the death message
 let endprocess = false;
 
+// ASAN
 let skeleton_shielder_ani = new SpecialAni();
 let skeleton_archer_ani = new SpecialAni();
 let skeleton_knife_ani = new SpecialAni();
@@ -96,6 +100,9 @@ let menu;
 
 
 // for different Loop
+// the more loop player play
+// the more better they are,
+// also monster will be enhanced as well
 let LoopTime;
 let Finished_room;
 let atkTimes;
@@ -104,7 +111,11 @@ let magicTimes;
 let shootTimes;
 let dashTimes;
 
-// as name
+
+let Menu_wait_time = 0; // if player mouse has been 
+//the same place as tutorial or play once the pressed and the game end, the programm will respond so quickly
+
+// ASAN
 const tutorialText = `
 Game Controls Tutorial
 
@@ -133,9 +144,13 @@ Additional Tips:
 Make sure to practice these controls in the tutorial area to get comfortable before facing real challenges in the game.
 `;
 
+
 function setup() {
+  //ASAN
   createCanvas(40*16 + 5 * 16,20 * 16);
 
+
+  // use localstorage to store important data
   if(localStorage.getItem("LoopTime") === null){
     localStorage.setItem("LoopTime",1);
   }
@@ -175,13 +190,14 @@ function setup() {
 
   
 
-
+  // this is to set listener once the music end
   for(let i = 0; i < musicList.length; ++i){
     musicList[i].onended(music_shuffle);
   }
 }
 
 function draw() {
+  // ASAN
   clear();
   gameProcess();
 
@@ -190,6 +206,7 @@ function draw() {
 
 
 function mousePressed() {
+  // ASAN, only apply in mainmenu state
   if(is_tutorial_show && gameState === 'mainMenu'){
     is_tutorial_show = false;
   }
@@ -218,11 +235,24 @@ function keyPressed(){
   //   }}
   
   // if(keyIsDown(49))hero.immuneFreeze += 0x3f3f3f; 
+
+  // above is test
+
+  // press 0 to show collider
+  if(keyIsDown(48) && gameState === "play"){
+    for(let i = 0; i < monsterList.length; ++i){
+      monsterList[i].debug = hero.debug;
+      monsterList[i].debug ? monsterList[i].debug = false : monsterList[i].debug = true;
+    }
+    hero.debug ? hero.debug = false : hero.debug = true
+  }
+  
 }
 
 
 
 function uiBar(){
+  // ASAN, show skillfreeze by graphic also hp_bar
   textSize(20);
 
   rectMode(CORNER)
@@ -259,6 +289,8 @@ function uiBar(){
 
 
 function check_dash(){
+  // ASAN , check for dash_hero
+  // the location for hero next dash
   Is_dash_touch = false;
   for(let i = 0; i < monsterList.length; ++i){
     if(dash_hero.CheckCollision(monsterList[i].selfcollider)){
@@ -294,7 +326,10 @@ function check_dash(){
 
 
 function generate_monster(){
+  // ASAN
   if(dungeon.map[dungeon.index[0]][dungeon.index[1]].type !== 'boss'){
+    // not the boss, generate the monster one by one
+    // rather than generate all of them at one time
     if(ShiftFreeze > 0)ShiftFreeze --;
     if(generateFreeze > 0)generateFreeze --;
 
@@ -307,7 +342,7 @@ function generate_monster(){
         monsterList.push(new Enemy(x,y,null,null,null,ENEMY_TYPE[int(random(ENEMY_TYPE.length))]));
         generateFreeze = 90;
         Monsternum--;
-        if(hero.hp > 0)hero.immuneFreeze += 60 ;
+        if(hero.hp > 0)hero.immuneFreeze += 40 ;
       }
         
       if(Monsternum === 0)dungeon.map[dungeon.index[0]][dungeon.index[1]].has_generate = true;
@@ -316,6 +351,7 @@ function generate_monster(){
     if(!dungeon.map[dungeon.index[0]][dungeon.index[1]].played && dungeon.map[dungeon.index[0]][dungeon.index[1]].has_generate
       && monsterList.length === 0
     ){
+      // if played then set up variable
       dungeon.map[dungeon.index[0]][dungeon.index[1]].played = true;
       Finished_room++;
       localStorage.setItem("Finished_room",Finished_room);
@@ -324,6 +360,7 @@ function generate_monster(){
   }
   else{
     if(!dungeon.map[dungeon.index[0]][dungeon.index[1]].played && !dungeon.map[dungeon.index[0]][dungeon.index[1]].has_generate){
+      // generate the boss at one time
       for(let i = 0; i < 2; ++i){
         let x = random(EDGE.xstart ,EDGE.xend);
         let y = random(EDGE.ystart, EDGE.yend);
@@ -332,11 +369,16 @@ function generate_monster(){
       }
    } 
    if(monsterList.length === 0 && !endprocess){
+    // endprocee is the var help me generate the taunt just once after boss died
+    // set up variable after boss die
     dungeon.map[dungeon.index[0]][dungeon.index[1]].played = true;
     complimentSentence = int(random(compliments.length));
     endprocess = true;
     LoopTime ++;
     localStorage.setItem("LoopTime",LoopTime);
+    for(let i = 0; i < dungeon.cell.length; i++){
+      if(!dungeon.map[dungeon.cell[i][0]][dungeon.cell[i][1]].played)dungeon.map[dungeon.cell[i][0]][dungeon.cell[i][1]].played = true;
+    }
   }
   }
 }
@@ -344,7 +386,8 @@ function generate_monster(){
 
 function gameLoop(){
   
-  
+  // ASAN
+  // aplly when game state is play
 
   dungeonDisplay();
 
@@ -352,19 +395,21 @@ function gameLoop(){
 
   hero.all_in_one();
 
-  
+  //make hero move only it is alive
   if(hero.hp > 0){
     hero.action();
     hero.skillAction();
     check_dash();
   }
 
+  // clear bullet once hero die
   if(hero.hp === 0)BulletList.length = 0;
   
 
   generate_monster();
 
 
+  // check for monster death 
   for(let i = 0; i < monsterList.length; ++i){
     monsterList[i].Enemy_action();
     if(monsterList[i].condition === 'null'){
@@ -372,13 +417,14 @@ function gameLoop(){
       i--;
       if(hero.hp > 0){
         if(hero.hp === hero.hpMax)hero.immuneFreeze += 30;
-        hero.hp += 3;
+        hero.hp += hero.hpMax / 20;
         if(hero.hp > hero.hpMax)hero.hp = hero.hpMax;
         
       }
     }
   }
 
+  // check for if the bullet has used
   for(let i = 0; i < BulletList.length; ++i){
     BulletList[i].display();
     BulletList[i].out_of_range();
@@ -395,13 +441,13 @@ function gameLoop(){
 
   
 
-  // check for door
-  
+
+  // display mini_map  
   dungeon.mini_map();
   
 
 
-
+ // ASAN
   uiBar();
   hero.hp_bar();
   
@@ -412,43 +458,55 @@ function gameLoop(){
   // clear();
 
   // image(temp.get(0,0,48,32),mouseX,mouseY);
-
-
-  //highlight here, one bug
+  //highlight here, one bug, cause my skeleton not move properly
+  // this is because here the index of ani class has always change
   // image(skeleton_shielder_ani.aniarr['run']['right'][skeleton_shielder_ani.index % 7],mouseX,mouseY);
   // if(frameCount % 7 === 0)skeleton_shielder_ani.index ++;
 }
 
 function gameProcess(){
+  // ASAN
+  // run the programm under diff gameState
   if(gameState === 'play'){
     textAlign(LEFT,BOTTOM);
     textStyle(BOLD);
     gameLoop();
+    // hero is dead
     if(hero.condition === 'null'){
       textAlign(CENTER);
       textStyle(ITALIC);
+      fill(255,0,0);
       text(taunts[tauntSentence],(EDGE.xstart + EDGE.xend)/2,(EDGE.ystart + EDGE.yend)/2);
 
       text("Press to return to the main menu",mouseX,mouseY);
 
-      if(mouseIsPressed) gameState = 'mainMenu';
+      if(mouseIsPressed){
+        gameState = 'mainMenu';
+        Menu_wait_time = 30;
+      } 
     }
 
-
+    // boss is dead, player win
     if(dungeon.map[dungeon.bossCell[0][0]][dungeon.bossCell[0][1]].played){
       textAlign(CENTER);
       textStyle(ITALIC);
+      fill(0,255,0);
       text(compliments[complimentSentence],(EDGE.xstart + EDGE.xend)/2,(EDGE.ystart + EDGE.yend)/2);
 
       
       text("Press to return to the main menu",mouseX,mouseY);
 
-      if(mouseIsPressed) gameState = 'mainMenu';
+      if(mouseIsPressed){
+        gameState = 'mainMenu';
+        Menu_wait_time = 30;
+      } 
     }
    
   }
   else if(gameState === 'init'){
-    monsterList.length = 0;
+   // init all the variable
+  musicIndex = int(random(musicList.length))
+  monsterList.length = 0;
    dungeon = new Dungeon();
    dungeon.setup();
    hero = new SpecialCharacter((EDGE.xstart + EDGE.xend)/2,(EDGE.ystart + EDGE.yend)/2, 20 + int(Finished_room/3), 50 + int(Finished_room), hero_ani);
@@ -458,6 +516,11 @@ function gameProcess(){
     endprocess = false;
   }
   else if(gameState === 'mainMenu'){
+    // show the button once the gameState is main menu
+    // stop the music
+    if(Menu_wait_time > 0)Menu_wait_time --;
+
+    if(musicList[musicIndex].isPlaying())musicList[musicIndex].stop();
     textAlign(LEFT,BOTTOM);
     textStyle(BOLD);
     imageMode(CORNER);
@@ -465,20 +528,16 @@ function gameProcess(){
     fill(255);
     textSize(40);
     text("Loop Hero",50,50);
-
-    
-
-
     text(`Loop: ${LoopTime}`,32*16, 100);
     text(`Finished room: ${Finished_room}`,16*16, 320);
-
-  fill(0)
+    // use the diff of fill to show the touch of button
+    fill(0)
   if(mouseX <= 230 && mouseX >= 30
     && mouseY <= 280 && mouseY >= 200
     && !is_tutorial_show
   ){
     fill(0,255,0);
-    if(mouseIsPressed && !is_tutorial_show){
+    if(mouseIsPressed && !is_tutorial_show && Menu_wait_time === 0){
       is_tutorial_show = true;
     } 
   }
@@ -505,7 +564,7 @@ function gameProcess(){
     && mouseY <= 180 && mouseY >= 100
   ){
     fill(0,255,0);
-    if(mouseIsPressed){
+    if(mouseIsPressed && Menu_wait_time === 0){
       gameState = 'init';
     }
   }

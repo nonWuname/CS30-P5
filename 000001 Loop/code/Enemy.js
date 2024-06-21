@@ -1,4 +1,10 @@
+// the meaning of code are as same as the name is short for ASAN;
+// the class of Enemy
+
+
 function shallowClone(obj) {
+    // make clone of object,
+    // use = to assign will make problem because it is pass by reference
     let clonedObj = {};
     for (let key in obj) {
         if (obj.hasOwnProperty(key)) {
@@ -11,13 +17,15 @@ function shallowClone(obj) {
 
 class Enemy extends SpecialCharacter {
     constructor(x, y, atk, hp, ani, type) {
+        // ASAN
 
+        // i need to setup different date for diff type of skeleton
         super(x, y, atk, hp, ani);
 
         this.type = type;
         if (this.type === 'shielder') {
-            this.atk = 4 * (1 + LoopTime * 0.15);
-            this.hp = 100 * (1 + LoopTime * 0.15); 
+            this.atk = 4 * (1 + (LoopTime - 1) * 0.15);
+            this.hp = 100 * (1 + (LoopTime - 1) * 0.15); 
             this.hpMax = this.hp;
             this.speed = 1;
             this.framelimit.atk = 6;
@@ -26,7 +34,7 @@ class Enemy extends SpecialCharacter {
             this.height = 46;
             this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
 
-            this.lastmethod = 0;
+            
             this.currmethod = 0;
 
             this.liveFreeze = 0;
@@ -39,8 +47,8 @@ class Enemy extends SpecialCharacter {
             this.ani = shallowClone(skeleton_shielder_ani);
         }
         else if(this.type === 'knife'){
-            this.atk = 9  * (1 + LoopTime * 0.15);
-            this.hp = 38  * (1 + LoopTime * 0.15);
+            this.atk = 9  * (1 + (LoopTime - 1) * 0.15);
+            this.hp = 38  * (1 + (LoopTime - 1) * 0.15);
             this.hpMax = this.hp;
             this.speed = 2;
             this.framelimit.atk = 3;
@@ -49,7 +57,7 @@ class Enemy extends SpecialCharacter {
             this.height = 46;
             this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
             this.Skillcollider = new Collider(0, 0, 0, 0, 'rect', 0, 'null', 'null', false);
-            this.lastmethod = 0;
+            
             this.currmethod = 0;
 
             this.liveFreeze = 0;
@@ -62,8 +70,8 @@ class Enemy extends SpecialCharacter {
             this.ani = shallowClone(skeleton_knife_ani);
         }
         else if(this.type === 'spearman'){
-            this.atk = 7  * (1 + LoopTime * 0.15);
-            this.hp = 56  * (1 + LoopTime * 0.15);
+            this.atk = 7  * (1 + (LoopTime - 1) * 0.15);
+            this.hp = 56  * (1 + (LoopTime - 1) * 0.15);
             this.hpMax = this.hp;
             this.speed = 1;
             this.framelimit.atk = 8;
@@ -72,7 +80,7 @@ class Enemy extends SpecialCharacter {
             this.height = 46;
             this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
             
-            this.lastmethod = 0;
+            
             this.currmethod = 0;
 
             this.atkwidth = this.atkwidth / 1.5 ;
@@ -85,8 +93,8 @@ class Enemy extends SpecialCharacter {
             this.ani = shallowClone(skeleton_spearman_ani);
         }
         else if(this.type === 'archer'){
-            this.atk = 22  * (1 + LoopTime * 0.15);
-            this.hp = 30  * (1 + LoopTime * 0.15);
+            this.atk = 22  * (1 + (LoopTime - 1) * 0.15);
+            this.hp = 30  * (1 + (LoopTime - 1) * 0.15);
             this.hpMax = this.hp;
             this.speed = 1;
             this.framelimit.atk = 5;
@@ -95,7 +103,7 @@ class Enemy extends SpecialCharacter {
             this.height = 46;
             this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
             
-            this.lastmethod = 0;
+            
             this.currmethod = 0;
 
             this.force = 1;
@@ -107,8 +115,8 @@ class Enemy extends SpecialCharacter {
         }
         
         if(this.type === 'boss0'){
-            this.atk = 12  * (1 + LoopTime * 0.15);
-            this.hp = 800  * (1 + LoopTime * 0.15);
+            this.atk = 12  * (1 + (LoopTime - 1) * 0.15);
+            this.hp = 800  * (1 + (LoopTime - 1) * 0.15);
             this.hpMax = this.hp;
             this.speed = 1;
             this.framelimit.atk = 6;
@@ -117,7 +125,7 @@ class Enemy extends SpecialCharacter {
             this.height = 46;
             this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
 
-            this.lastmethod = 0;
+            
             this.currmethod = 0;
 
             this.liveFreeze = 0;
@@ -130,9 +138,10 @@ class Enemy extends SpecialCharacter {
             this.ani = shallowClone(skeleton_boss0_ani);
         }
         if(this.type === 'boss1'){
-            this.atk = 28  * (1 + LoopTime * 0.15);
-            this.hp = 600  * (1 + LoopTime * 0.15);
+            this.atk = 28  * (1 + (LoopTime - 1) * 0.15);
+            this.hp = 600  * (1 + (LoopTime - 1) * 0.15);
             this.hpMax = this.hp;
+            this.liveFreeze = 0;
             this.speed = 1;
             this.framelimit.atk = 8;
             this.framelimit.run = 7;
@@ -140,7 +149,7 @@ class Enemy extends SpecialCharacter {
             this.height = 46;
             this.selfcollider = new Collider(this.x, this.y, this.width, this.height, 'rect', 0, 'null', 'null', true);
             
-            this.lastmethod = 0;
+            
             this.currmethod = 0;
 
             this.atkwidth = this.atkwidth / 1.5 ;
@@ -159,19 +168,19 @@ class Enemy extends SpecialCharacter {
 
     }
     Enemy_action() {
-
+        // ASAN, the whole action for enemy
+        
         this.update();
         this.CheckEdge();        
         super.display();
       
 
- 
+        // no skillcollider for archer
         if(this.type === 'archer'){
-            this.Skillcollider.active = false;
-            
+            this.Skillcollider.active = false; 
         }
         
-        if(this.Skillcollider.active){
+        if(this.Skillcollider.active && this.debug){
             this.Skillcollider.display();
         }
         this.hp_bar();
@@ -183,7 +192,9 @@ class Enemy extends SpecialCharacter {
     }
 
     update() {
+        // ASAN, update for enemy
 
+        // knife , boss1 will change atk and hp if they live longer
         if((this.type === 'knife' || this.type === 'boss1')  && this.hp !== 0){
             this.liveFreeze ++;
             if(this.liveFreeze % 120 === 0 ) {
@@ -191,21 +202,22 @@ class Enemy extends SpecialCharacter {
                     this.atk += 1
                     this.hp += hero.atk / 5;
                 }this.atk++;
-                if(this.hp < this.hpMax)this.hp+=3;
+                if(this.hp < this.hpMax)this.hp +=3 ;
                 if(this.hp > this.hpMax)this.hp = this.hpMax;
 
             }
         }
+        // shielder and boss 0 will increase atk if they live longer
         if(this.type === 'shielder' || this.type === 'boss0'){
             this.liveFreeze ++;
             if(this.liveFreeze % 240 === 0){
                 this.atk++;
-                if(this.type === 'boss0') atk+= hero.hpMax / 30;
+                if(this.type === 'boss0') this.atk+= hero.hpMax / 30;
             }
         }
 
 
-        
+        // if hero not die , make the move else be idle
         if (!(hero.condition === 'die' || hero.condition === 'null') && hero.hp > 0 && this.hp > 0 ) {
             this.Change_method();
             this.Enemy_walk_method();
@@ -213,11 +225,11 @@ class Enemy extends SpecialCharacter {
         else this.condition = 'idle';
 
         
-
+        // make the skilldemand into condition
         if(this.skilldemand === 'atk')this.condition = 'atk';
 
 
-
+        // only shielder's skillcollider are as same as his selfcollider
         if (this.type === 'shielder') {
             super.SetCollider(this.x, this.y, this.width, this.height,null,null);
         }
@@ -228,6 +240,7 @@ class Enemy extends SpecialCharacter {
     }
 
     atkAction() {
+        // ASAN, archer were the special case
         if (this.type !== 'archer') {
             if (this.atk_range() && hero.immuneFreeze === 0) {
                 if (this.skillActive === false && this.atkFreeze === 0 && hero.hp > 0 && this.hp > 0 && hero.immuneFreeze === 0) {
@@ -239,43 +252,47 @@ class Enemy extends SpecialCharacter {
             }
         }
 
-            if (this.Skillcollider.CheckCollision(hero.selfcollider) && hero.immuneFreeze === 0) {
-                this.applyForce('hero');
-                if(this.type === 'shielder' || this.type === 'boss0'){
-                    shield_atk.play();
+        // monster attack hero
+        if (this.Skillcollider.CheckCollision(hero.selfcollider) && hero.immuneFreeze === 0) {
+            this.applyForce('hero');
+            if(this.type === 'shielder' || this.type === 'boss0'){
+                shield_atk.play();
+            }
+            else atkSFX.play();
+            hero.hp -= this.atk;
+            hero.immuneFreeze = 80;
+            hero.CheckEdge();
+        }
+        else if (hero.Skillcollider.CheckCollision(this.selfcollider) && this.immuneFreeze === 0) {
+            // hero attack monster
+            this.applyForce('self');
+            if(this.type === 'shielder' || this.type === 'boss0' || this.type === 'boss1')this.Shield_reduce_damage(hero.Skillcollider.damageDirection);
+            else this.hp -= hero.Skillcollider.damage;
+            this.immuneFreeze = 30;
+            atkSFX.play();
+            this.CheckEdge();
+
+        }
+
+        // shield counter
+        if(hero.Skillcollider.CheckCollision(this.Skillcollider) && hero.skilldemand === 'def'){
+            if((hero.direction === 'right' && this.direction === 'left')
+                || (hero.direction === 'left' && this.direction === 'right')
+                || (hero.direction === 'up' && this.direction === 'down')
+                ||(hero.direction === 'down' && this.direction === 'up')
+                ){
+                    shield_counter.play();   
+                    defTimes > 100 ? hero.immuneFreeze += 60 : hero.immuneFreeze += 30;
                 }
-                else atkSFX.play();
-                hero.hp -= this.atk;
-                hero.immuneFreeze = 80;
-                hero.CheckEdge();
-            }
-            else if (hero.Skillcollider.CheckCollision(this.selfcollider) && this.immuneFreeze === 0) {
-                this.applyForce('self');
-                if(this.type === 'shielder' || this.type === 'boss0' || this.type === 'boss1')this.Shield_reduce_damage(hero.Skillcollider.damageDirection);
-                else this.hp -= hero.Skillcollider.damage;
-                this.immuneFreeze = 30;
-                atkSFX.play();
-                this.CheckEdge();
-
-            }
-
-            if(hero.Skillcollider.CheckCollision(this.Skillcollider) && hero.skilldemand === 'def'){
-                if((hero.direction === 'right' && this.direction === 'left')
-                    || (hero.direction === 'left' && this.direction === 'right')
-                    || (hero.direction === 'up' && this.direction === 'down')
-                    ||(hero.direction === 'down' && this.direction === 'up')
-                    ){
-                        shield_counter.play();   
-                        defTimes > 100 ? hero.immuneFreeze += 60 : hero.immuneFreeze += 30;
-                    }
-                
-            }
-            // print(this.x,this.y)
-        
+            
+        }
+        // print(this.x,this.y)
+    
 
     }
 
     applyForce(to_Who) {
+        // ASAN
         if (to_Who === 'self') {
             this.x = this.x + (this.x - hero.x) * this.defForce;
             this.y = this.y + (this.y - hero.y) * this.defForce;
@@ -286,6 +303,7 @@ class Enemy extends SpecialCharacter {
         }
     }
     CheckEdge() {
+        // ASAN
         if (this.x > EDGE.xend) this.x = EDGE.xend;
         if (this.x < EDGE.xstart) this.x = EDGE.xstart;
         if (this.y < EDGE.ystart) this.y = EDGE.ystart;
@@ -294,6 +312,8 @@ class Enemy extends SpecialCharacter {
 
 
     Enemy_walk_method() {
+        // ASAN, archer were the special case,
+        // all run toward to player except archer
         this.condition = 'run';
 
         if (this.currmethod === 0 && this.type !== 'archer') {
@@ -387,17 +407,15 @@ class Enemy extends SpecialCharacter {
     }
 
     Change_method() {
+        // change the way of walk
+        // walk horizontal first or walk vertically first?
         if (frameCount % this.changeMethod === 0) {
-            if (this.lastmethod === this.currmethod) {
                 if (this.currmethod === 1) {
                     this.currmethod = 0;
-                    this.lastmethod = 0;
                 }
                 else if (this.currmethod === 0) {
                     this.currmethod = 1;
-                    this.lastmethod = 1;
                 }
-            }
         }
     }
 
@@ -405,6 +423,7 @@ class Enemy extends SpecialCharacter {
 
 
     hp_bar() {
+        // ASAN
         if (this.hp !== this.hpMax) {
             rectMode(CORNER);
             fill(255, 0, 0);
@@ -418,8 +437,9 @@ class Enemy extends SpecialCharacter {
 
 
     Shield_reduce_damage(direction , coefficient){
+        // ASAN, boss 0 and 1 and shielder have this, does not apply to magic and shoot
         if(this.type === 'shielder') coefficient = 0.75
-        else if(this.type === 'boss0')oefficient = 0.85
+        else if(this.type === 'boss0')coefficient = 0.85
         else coefficient = 0.4;
 
         if(this.direction === direction){
@@ -441,6 +461,7 @@ class Enemy extends SpecialCharacter {
 
 
     atk_range(){
+        // ASAN, the range are change once change horizontal and vertical
         if(this.direction === 'right' || this.direction === 'left'){
             return (Math.abs(this.x - hero.x) < this.width + this.atkheight + 17 &&
             Math.abs(this.y - hero.y) < this.height + this.atkwidth + 17)

@@ -1,12 +1,12 @@
+// this is My load file, deal all the load problem;
 
+// the meaning of code are as same as the name is short for ASAN;
+
+
+// ASAN
 const ANIDIRECTION = ["down", 'left', 'right', 'up'];
-
-
-
-
 let ClosedDoorset = []; 
 let OpenDoorset = []
-
 let wallset = []; // 40 x 20
 let floorset = []; // 38 x 17
 
@@ -21,8 +21,11 @@ let floorset = []; // 38 x 17
 
 function loadAssets() {
 
-  
+  // load Assets
 
+
+  
+  // load the menu
   menu = loadImage("assets/2.png");
 
   
@@ -42,6 +45,7 @@ function loadAssets() {
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
     hero_ani.loadAni('shoot', ANIDIRECTION[i] , 'assets/main Character/shoot/' + ANIDIRECTION[i]  + '/' , 5);
   }
+  // diff method because the diff of file name and direction
   for(let i = 0; i < 5; ++i){
     hero_ani.aniarr['die'].push(loadImage('assets/main Character/die/' + i + '.png'));
   }
@@ -103,11 +107,10 @@ function loadAssets() {
     OpenDoorset.push(loadImage("assets/Opendoor/" + i + '.png'))
   }
  
-  for(let i = 0; i < 2; ++i){
+  for(let i = 0; i < 8; ++i){
     musicList.push(loadSound('assets/music/' + i  + '.mp3'));
   }
-  // mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【本草綱目Chinese Herbal Manual】-Official Music Video.mp3'));
-  // mymusic.musicarr.push(loadSound('assets/周杰倫 Jay Chou【霍元甲 Fearless】-Official Music Video.mp3'));
+ 
 
   // boss
   for(let i = 0 ; i < ANIDIRECTION.length; ++i){
@@ -136,7 +139,7 @@ function loadAssets() {
 
 
 function preload() {
-
+  // load the assets in preload
   loadAssets();
 
 }

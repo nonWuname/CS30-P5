@@ -1,3 +1,7 @@
+// oh, the class i write for few day
+// no enumeration, pure algorithms(hopefully)
+// class about the dungeon
+// the meaning of code are as same as the name is short for ASAN;
 
 let direction = [
     [-1, 0], // y x, north
@@ -10,6 +14,7 @@ let direction = [
 class Dungeon {
 
     constructor() {
+        //ASAN
         this.map = [];
         this.size = 5;
         this.origin = (this.size - 1) / 2;
@@ -21,6 +26,7 @@ class Dungeon {
     }
 
     setup() {
+        //ASAN
         this.grid_ini();
         this.dfs(this.origin, this.origin, 12);
         this.bfs(this.origin, this.origin);
@@ -28,6 +34,9 @@ class Dungeon {
     }
 
     dfs(y, x, step) {
+        // depth first search
+        // generate the map
+        // random_walk need more to explain than dfs
         if (step === 0) return;
         else {
             this.map[y][x].visited = true;
@@ -36,6 +45,7 @@ class Dungeon {
     }
 
     grid_ini() {
+        // ASAN
         this.map.length = 0;
         for (let y = 0; y < this.size; ++y) {
             let temp = [];
@@ -47,7 +57,8 @@ class Dungeon {
     }
 
     mini_map() {
-
+        // ASAN
+        // draw for the small map in the right corner
         push();
         translate(40 * 16, 0);
         rectMode(CORNER);
@@ -63,6 +74,9 @@ class Dungeon {
         for (let y = 0; y < this.map.length; ++y) {
             for (let x = 0; x < this.map[y].length; ++x) {
                 if (this.map[y][x].visited) {
+                    // fill for different type,
+                    // player blue, spawn green, boss red,
+                    // played white and unplayed black
                     if(y === this.index[0] && x === this.index[1])fill(0,0,255);
                     else if (y === this.origin && x === this.origin)fill(0, 255, 0);
                     else if (y === this.bossCell[0][0] && x === this.bossCell[0][1])fill(255, 0, 0)
@@ -96,7 +110,7 @@ class Dungeon {
     }
 
     random_walk(y, x, step) {
-
+        // random Walk, just walk randomly and generate a Maze by the walk
         let neighborList = [];
 
         // push all available step into neighborlist
@@ -119,6 +133,7 @@ class Dungeon {
             let next_y = neighborList[temp][0], next_x = neighborList[temp][1];
             //print(next_y,next_x);
 
+            // next dfs
             this.dfs(next_y, next_x, step - 1)
         }
 
@@ -153,12 +168,14 @@ class Dungeon {
                 let next_y = curr[0] + direction[i][0];
                 let next_x = curr[1] + direction[i][1];
 
+
+                // set up the wallNum and the existence of wall
                 if (this.check(next_y, next_x)) {
                     this.map[curr[0]][curr[1]].neighborNum++;
                     this.map[curr[0]][curr[1]].noWall[i] = true;
                 }
 
-
+                // if next cell is valid and has not been visited, add to the queue
                 if (this.in_range(next_y, next_x) && this.map[next_y][next_x].visited && this.map[next_y][next_x].step === -1) {
                     this.map[next_y][next_x].step = this.map[curr[0]][curr[1]].step + 1;
                     queue.push([next_y, next_x, this.map[next_y][next_x].step]);
@@ -167,6 +184,7 @@ class Dungeon {
 
         }
 
+        // find the One way room except spawn room
         for (let i = 0; i < this.cell.length; ++i) {
             let y1 = this.cell[i][0], x1 = this.cell[i][1];
             if (this.map[y1][x1].neighborNum === 1 && !(y1 === this.origin && x1 === this.origin)) this.oneWay.push([y1, x1]);
@@ -201,6 +219,10 @@ class Dungeon {
 
 
     display(x,y,shiftX, shiftY,drawdoor){
+        // display map[y + shiftY][x + shiftX] image
+        // also include shift, this is useful for translate animation
+
+        // ASAN
         imageMode(CORNER);
         image(this.map[this.index[0] + shiftY][this.index[1] + shiftX].wall,x,y);
         image(this.map[this.index[0]+ shiftY][this.index[1] + shiftX].floor,x + 16,y + 32);
@@ -222,6 +244,7 @@ class Dungeon {
 
 class Room {
     constructor() {
+        // ASAN
         this.wall = wallset[0];
         this.floor = floorset[0];
         // room condition , n,w,s,e north,west,south,east
@@ -235,61 +258,62 @@ class Room {
         this.has_generate = false;
     }
 
-    init() {
-        switch (this.neighborNum) {
-            case 1: if (this.noWall[0]) {//n
+    // bad version
+    // init() {
+    //     switch (this.neighborNum) {
+    //         case 1: if (this.noWall[0]) {//n
 
-            }
-            else if (this.noWall[1]) {//w
+    //         }
+    //         else if (this.noWall[1]) {//w
 
-            }
-            else if (this.noWall[2]) {//s
+    //         }
+    //         else if (this.noWall[2]) {//s
 
-            }
-            else if (this.noWall[3]) {//e
+    //         }
+    //         else if (this.noWall[3]) {//e
 
-            }
-                break;
+    //         }
+    //             break;
 
-            case 2: if (this.noWall[0] && this.noWall[1]) {// n w 
+    //         case 2: if (this.noWall[0] && this.noWall[1]) {// n w 
 
-            }
-            else if (this.noWall[0] && this.noWall[2]) { // n s
+    //         }
+    //         else if (this.noWall[0] && this.noWall[2]) { // n s
 
-            }
-            else if (this.noWall[0] && this.noWall[3]) {// n e
+    //         }
+    //         else if (this.noWall[0] && this.noWall[3]) {// n e
 
-            }
-            else if (this.noWall[1] && this.noWall[2]) {// w s
+    //         }
+    //         else if (this.noWall[1] && this.noWall[2]) {// w s
 
-            }
-            else if (this.noWall[1] && this.noWall[3]) {// w e
+    //         }
+    //         else if (this.noWall[1] && this.noWall[3]) {// w e
 
-            }
-            else if (this.noWall[2] && this.noWall[3]) {// s e
+    //         }
+    //         else if (this.noWall[2] && this.noWall[3]) {// s e
 
-            }
-                break;
+    //         }
+    //             break;
 
 
 
-            case 3: if (!this.noWall[0]) {//s w e
+    //         case 3: if (!this.noWall[0]) {//s w e
 
-            }
-            else if (!this.noWall[1]) {// n w e
+    //         }
+    //         else if (!this.noWall[1]) {// n w e
 
-            }
-            else if (!this.noWall[2]) {// n s e
+    //         }
+    //         else if (!this.noWall[2]) {// n s e
 
-            }
-            else if (!this.noWall[3]) { // n w s
+    //         }
+    //         else if (!this.noWall[3]) { // n w s
 
-            }
-                break;
+    //         }
+    //             break;
 
-            case 4: // n w s e
-        }
-    }
+    //         case 4: // n w s e
+    //     }
+    // }
 
 
 }
@@ -297,6 +321,13 @@ class Room {
 
 
 function dungeonDisplay(){
+    // ASAN
+    // to display dungeon by diff condition
+    // for understanding of translate animation,
+    // one is original one is next, they both move and player move opposite
+    // draw two together, once freeze time run out,
+    // move the player index and change dungeonX and dungeonY to 0
+    // paning is null then
     if(paning === 0)dungeon.display(dungeonX,dungeonY,0,0,-1);
     else if(paning === 1 && freezetime > 0){
       paningstate = 'up';

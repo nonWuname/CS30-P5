@@ -1,5 +1,0 @@
-bottom 
-
-0 lt corner
-1 rt corner
- 
