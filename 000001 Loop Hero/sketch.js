@@ -1,6 +1,6 @@
 // Loop Hero
 // Luke Wu
-// Date
+// May 13, 2024
 //
 // Repeat loop game, fight for fun, just fight
 
